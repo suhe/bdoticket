@@ -97,6 +97,10 @@ class TicketController extends Controller {
             $users[] = Employee::getEmployeeEmail($id);
             $ticket = new Ticket();
             $query = $ticket->getTicketSingleData($id);
+            if($query->ticket_status==0)
+                $redirect = Yii::$app->request->hostInfo.\yii\helpers\Url::to(['ticket/index']);
+            else
+                $redirect = '';
             $mail = [];
             if(count($users)>0){
                 foreach ($users as $user) {
@@ -115,7 +119,7 @@ class TicketController extends Controller {
             Yii::$app->mailer->sendMultiple($mail);
             $model->refresh();
             Yii::$app->response->format = 'json';
-            return ['success' => true,'comment' => $model->log_desc,'date' => date('d/m/Y H:i:s'),'employee'=>Yii::$app->user->identity->EmployeeFirstName];
+            return ['success' => true,'comment' => $model->log_desc,'date' => date('d/m/Y H:i:s'),'employee'=>Yii::$app->user->identity->EmployeeFirstName,'redirect' => $redirect];
             
         }
         

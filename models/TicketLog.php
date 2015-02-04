@@ -74,7 +74,7 @@ class TicketLog extends ActiveRecord {
             if($this->log_status){
                 $status = $closed_status;
 		$rating = $this->ticket_rating;
-		$comment  = \app\models\Ticket::getStringRating($this->ticket_rating);
+		$comment  = Yii::t('app','rating').\app\models\Ticket::getStringRating($this->ticket_rating);
             }
             else {
                 $status=2;
@@ -92,7 +92,7 @@ class TicketLog extends ActiveRecord {
         ->from('ticket_log')
         ->join('left join','employee','employee.employee_id=ticket_log.employee_id')
         ->where(['ticket_id'=>$id])
-        ->orderBy('log_date DESC')
+        ->orderBy(['ABS(log_id)' => SORT_ASC])
         ->all();
     }
     

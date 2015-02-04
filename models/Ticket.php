@@ -185,7 +185,7 @@ class Ticket extends ActiveRecord {
             WHEN 2 THEN 'Proses'
             WHEN 1 THEN 'Selesai'
             WHEN 0 THEN 'Tutup'
-        END ticket_status_string,ticket_helpdesk,ticket_note,ticket_type,ticket_handling
+        END ticket_status_string,ticket_status,ticket_helpdesk,ticket_note,ticket_type,ticket_handling
         FROM ticket t
         LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
         LEFT JOIN employee hh on hh.employee_id = h.employee_id

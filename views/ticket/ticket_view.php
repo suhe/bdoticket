@@ -114,6 +114,7 @@ $this->params['addUrl'] = 'ticket/new';
 					<?=$form->field($model,'log_desc')->textarea(['rows' => 2])?>
 					<div class="col-lg-12">
 					    <?=$form->field($model,'log_status')->checkbox(['value'=>1])?>
+					    <?php // Yii::$app->request->hostInfo.\yii\helpers\Url::to(['ticket/index'])?>
 					</div>
 					
 					<div id="rating" style="display: none">
@@ -176,6 +177,11 @@ $('#form').on('beforeSubmit', function(e) {
 		    $("#commentAjax").append(stringLi);
 		    $("#ticketlog-log_desc").val("");
 		    $('.loading').hide();
+		    
+		    if(data.redirect!=''){
+			$(location).attr('href',data.redirect);
+		    }
+		    
 		}
 		else {
 		    alert("Error");
