@@ -42,7 +42,7 @@ class SiteController extends Controller {
         } 
         return $this->render('login',[
             'model' => $model,
-	    	'employee' => $model->getEmployeeBpjs()
+	    	//'employee' => $model->getEmployeeBpjs()
         ]);
     }			
     
