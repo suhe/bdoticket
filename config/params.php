@@ -1,20 +1,11 @@
 <?php
 return [
-    'title' => 'BPJS',
+    'title' => 'BDO Ticket',
     'start_page' => 1,
     'per_page' => 15,
     'copyright' => '&copy; 2014 <a href="http://bdo.co.id">BDO Indonesia</a>, All Rights Reserved. Powered By BDO Konsultan Indonesia',
-    'store_name' => "Yiishop",
+    'store_name' => "BDO Ticket",
     'module_default' => 'site/login',
-    'ticket_type' => [
-        'Monitor' => 'Monitor',
-        'Keyboard' => 'Keyboard',
-        'Mousepad' => 'Mousepad',
-        'Software' => 'Software',
-        'Port USB' => 'Port USB',
-        'Charger Notebook' => 'Charger Notebook',
-        'Lain-lain' => 'Lain-lain'
-    ],
     'ticket_status' => [
         4 => 'Baru',
         3 => 'Buka',

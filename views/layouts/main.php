@@ -4,7 +4,7 @@ use app\assets\AppAssetIE8;
 use app\assets\AppAssetIE9;
 use yii\helpers\Url;
 use yii\helpers\Html;
-use backend\components\Auth;
+//use backend\components\Auth;
 use yii\widgets\Breadcrumbs;
 AppAsset::register($this);
 AppAssetIE8::register($this);
@@ -22,7 +22,6 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-   
  <?php $this->head() ?>	
 </head>
 <body>
@@ -167,8 +166,9 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 	    <?php } ?>					
 	    <!-- BEGIN TOP MENU -->
 	    <div class="collapse navbar-collapse top-collapse">
-	      <!-- .nav -->
-	      <ul class="nav navbar-left navbar-nav">
+	    <!-- .nav -->
+	    <?php if(!Yii::$app->user->isGuest){ ?>
+	    <ul class="nav navbar-left navbar-nav">
 		<li><a href="<?=Url::to(['ticket/new'])?>"><i class="fa fa-plus"></i> <?=Yii::t('app','new ticket')?></a></li>
 		<li class="dropdown">
 		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -183,6 +183,7 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 	      </li>
 	      <li><a href="http://www.bdo.co.id" target="_blank">Visit Bdo.co.id </a></li>
 	    </ul><!-- /.nav -->
+	    <?php } ?>
 	  </div>
 	  <!-- END TOP MENU -->
 	</div><!-- /.nav-top -->
@@ -196,12 +197,14 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 					
 						<!-- BEGIN SHORTCUT BUTTONS -->
 						<div class="media">							
+							<?php if(!Yii::$app->user->isGuest){ ?>
 							<ul class="sidebar-shortcuts">
 								<li><a title="<?=Yii::t('app','new ticket')?>" href="<?=Url::to(['ticket/new'])?>"  class="btn"><i class="fa fa-plus icon-only"></i></a></li>
 								<li><a title="<?=Yii::t('app','my ticket')?>"  href="<?=Url::to(['ticket/index'])?>"class="btn"><i class="fa fa-list icon-only"></i></a></li>
 								<li><a title="<?=Yii::t('app','general setting')?>"  href="<?=Url::to(['administration/general'])?>"class="btn"><i class="fa fa-wrench icon-only"></i></a></li>
 								<li><a title="<?=Yii::t('app','change password')?>"  href="<?=Url::to(['administration/password'])?>"class="btn"><i class="fa fa-key icon-only"></i></a></li>
-							</ul>	
+							</ul>
+							<?php } ?>	
 						</div>
 						<!-- END SHORTCUT BUTTONS -->	
 						
@@ -255,16 +258,6 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 							  'icon' => 'fa fa-wrench',
 							  'sub'   => [
 							    [
-							      'label'=> Yii::t('app','general'),
-							      'url'  => 'administration/general',
-							      'icon' => 'fa fa-wrench'
-							    ],
-							    [
-							      'label'=> Yii::t('app','change password'),
-							      'url'  => 'administration/password',
-							      'icon' => 'fa fa-key'
-							    ],
-							    [
 							      'label'=> Yii::t('app','helpdesk'),
 							      'url'  => 'administration/helpdesk',
 							      'icon' => 'fa fa-user'
@@ -300,24 +293,7 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 								
 							  ]
 							],
-							[
-							  'url' => '#',
-							  'label'=> Yii::t('app','preference'),
-							  'icon' => 'fa fa-wrench',
-							  'sub'   => [
-							    [
-							      'label'=> Yii::t('app','general'),
-							      'url'  => 'administration/general',
-							      'icon' => 'fa fa-wrench'
-							    ],
-							    [
-							      'label'=> Yii::t('app','change password'),
-							      'url'  => 'administration/password',
-							      'icon' => 'fa fa-key'
-							    ],
-								
-							  ]
-							],
+							
 						    ]
 						])?>
 						<?php } ?>
@@ -340,7 +316,7 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 								      'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 								  ]) ?>
 									
-									
+									<?php if(!Yii::$app->user->isGuest) {?>
 									<div class="b-right hidden-xs">
 										<ul>
 											<li><a href="#" title=""><i class="fa fa-signal"></i></a></li>
@@ -354,6 +330,7 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 											</li>
 										</ul>
 									</div>
+									<?php } ?>
 								</div>
 								<!-- END BREADCRUMB -->	
 								
@@ -372,7 +349,7 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 							<div class="footer-inner">
 								<!-- basics/footer -->
 								<div class="footer-content">
-									<?=date('Y') ?><?=Yii::$app->params['copyright']?>
+									<?=Yii::$app->params['copyright']?>
 								</div>
 								<!-- /basics/footer -->
 							</div>

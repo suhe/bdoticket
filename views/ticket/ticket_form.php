@@ -1,6 +1,7 @@
 <?php
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use app\models\TicketCategory;
 $this->params['breadcrumbs'] = [
     ['label' => Yii::t('app','my ticket'),'url' => ['ticket/index']],
     ['label' => Yii::t('app','new'),'url' => ['ticket/new']]
@@ -26,18 +27,18 @@ $this->params['addUrl'] = 'ticket/new';
                 <div id="ft-3" class="panel-collapse collapse in">
 		    <div class="portlet-body">
 			
-                        <?php $form = ActiveForm::begin([
-                        'id' => 'menu-add-form',
-                        'method' => 'post',
-                        'options' => ['class' => 'form-horizontal'],
-                        'fieldConfig' => [
-                            'template' => "{label}\n<div class=\"col-sm-10 search\">{input} {error}</div>\n",
-                            'labelOptions' => ['class' => 'col-sm-2 control-label'],
-                        ],
-                        ]);?>
+            <?php $form = ActiveForm::begin([
+                  'id' => 'menu-add-form',
+                   'method' => 'post',
+                   'options' => ['class' => 'form-horizontal'],
+                   'fieldConfig' => [
+                        'template' => "{label}\n<div class=\"col-sm-10 search\">{input} {error}</div>\n",
+                         'labelOptions' => ['class' => 'col-sm-2 control-label'],
+                  	],
+            ]);?>
 			
 			<?=$form->field($model,'ticket_subject')->textInput();?>
-			<?=$form->field($model,'ticket_type')->dropDownList(Yii::$app->params['ticket_type'],['class'=>'col-lg-12',])?>
+			<?=$form->field($model,'ticket_category_id')->dropDownList(TicketCategory::lists("name","id"),['class'=>'col-lg-12',])?>
 			<?=$form->field($model,'ticket_note')->textarea(['rows' => 8])?>
 			
 			<div class="col-md-2">

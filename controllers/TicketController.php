@@ -1,7 +1,9 @@
 <?php
 namespace app\controllers;
 use yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
+use app\components\Role;
 use app\models\Ticket;
 use app\models\TicketLog;
 use app\models\Helpdesk;
@@ -10,20 +12,48 @@ use app\models\Employee;
  * Site controller
  */
 class TicketController extends Controller {
-    
     public $class='Ticket';
     
+    /**
+     * Behaviour Function
+     * Control Access Control Rule
+     */
+    public function behaviors() {
+    	return [
+    		'access' => [
+    			'class' => AccessControl::className(),
+    			'ruleConfig' => [
+    				'class' => Role::className(),
+    			],
+    			'only' => ['index'],
+    				'rules' => [
+    					[
+    						'allow' => true,
+    						'actions' => ['index'],
+    							'roles' => [
+    								Helpdesk::ROLE_USER,
+    							],
+    					],
+    				],
+    				'denyCallback' => function ($rule, $action) {
+    					return $this->redirect(['ticket/index']);
+    				},
+    			],
+    		];
+    }
+    
+    /*
     public function ___construct(){
         parent::___construct();
         if(!Yii::$app->user->getId())
             return $this->redirect(['site/login']);
-    }
+    }*/
     
     public function actions(){
-        if(Yii::$app->user->isGuest){
-            Yii::$app->session->setFlash('msg',Yii::t('app/message','msg you must login'));
-            return $this->redirect(['site/login']);
-        }
+        //if(Yii::$app->user->isGuest){
+           // Yii::$app->session->setFlash('msg',Yii::t('app/message','msg you must login'));
+            //return $this->redirect(['site/login']);
+        //}
     }
     
     public function actionIndex(){
@@ -38,8 +68,8 @@ class TicketController extends Controller {
         ]); 
     }
     
-    public function actionNew(){
-        if(Yii::$app->session->get('helpdesk')) return $this->redirect(['ticket/order']);
+    public function actionNew() {
+        //if(Yii::$app->session->get('helpdesk')) return $this->redirect(['ticket/order']);
         $email = Employee::getEmployeeEmailById(Yii::$app->user->getId());
         if(!$email){
             Yii::$app->session->setFlash('msg',Yii::t('app/message','msg please fill email'));
@@ -49,13 +79,15 @@ class TicketController extends Controller {
         if($model->load(Yii::$app->request->post()) && $model->getSave()){
             $ticket_att = new \app\models\TicketAttachment();
             $ticket_att = $ticket_att->find()
-            ->where(['ticket_id' => 0 , 'ticket_md5'=>md5(Yii::$app->user->getId())])
+            ->where(['ticket_id' => 0 , 'ticket_md5' => md5(Yii::$app->user->getId())])
+            ->orderBy(["cdate" => "desc"])
             ->one();
+            
             if(count($ticket_att)>0){
                 $ticket_att->ticket_id = $model->getRelationId();
                 $ticket_att->update();
             }
-            
+           
             //register email for user login
             $users[] = $email;
             //create mail
@@ -77,8 +109,8 @@ class TicketController extends Controller {
                 ->setSubject(Yii::t('app/message','msg create a new ticket').' '.$model->getRelationId());
             }
             Yii::$app->mailer->sendMultiple($mail);
-            
-            Yii::$app->session->setFlash('msg',Yii::t('app/message','msg ticket has been insert'));
+           
+            Yii::$app->session->setFlash('message','<div class="alert alert-success"> <i class="fa fa-check"></i> '. Yii::t('app/message','msg ticket has been insert').'</div>');
             $this->redirect(['ticket/index'],301);
         }
         return $this->render('ticket_form',[
@@ -87,7 +119,7 @@ class TicketController extends Controller {
     }
     
     public function actionView($id){
-        if(Yii::$app->session->get('helpdesk')) return $this->redirect(['ticket/open','id'=>$id]);
+        //if(Yii::$app->session->get('helpdesk')) return $this->redirect(['ticket/open','id'=>$id]);
         if(!Ticket::getCheckId($id)) return $this->redirect(['ticket/index']);
         $model = new TicketLog();
         $query = Ticket::findOne($id);
@@ -133,6 +165,16 @@ class TicketController extends Controller {
         ]);
     }
     
+    public function actionRemove($id) {
+    	$ticket = Ticket::findOne($id);
+    	if($ticket->employee_id == Yii::$app->user->getId()) {
+    		Ticket::deleteAll('ticket_id = :id',[':id' => $id]);
+    	}
+    	
+    	return $this->redirect(['ticket/index']);
+    	
+    }
+    
     public function actionManagement(){
         if(!Yii::$app->session->get('helpdesk')) return $this->redirect(['ticket/index','id'=>$id]);
         $model = new Ticket(['scenario'=>'search']);
@@ -165,8 +207,7 @@ class TicketController extends Controller {
                 ->setSubject(Yii::t('app/message','msg ticket set helpdesk').' #'.$id);
             }
             Yii::$app->mailer->sendMultiple($mail);
-            
-            Yii::$app->session->setFlash('msg',Yii::t('app/message','msg set helpdesk successfully'));
+            Yii::$app->session->setFlash('msg','<div class="alert alert-success"> <i class="fa fa-check"></i> '. Yii::t('app/message','msg set helpdesk successfully').'</div>');
             return $this->redirect(['ticket/management']);
         }
         
@@ -326,6 +367,17 @@ class TicketController extends Controller {
             'model' => $model,
             'dataProvider' => $model->getTicketData(Yii::$app->request->queryParams)
         ]); 
+    }
+    
+    public function actionClosed($id) {
+    	$ticket = Ticket::findOne($id);
+    	//if closed
+    	if($ticket->ticket_status == 0) {
+    		Ticket::updateAll(['ticket_status_helpdesk' => 0], ['id' => $id]);
+    	}
+    	
+    	Yii::$app->session->setFlash('msg','<div class="alert alert-success"> <i class="fa fa-check"></i> '. Yii::t('app/message','msg ticket has been close').'</div>');
+    	return $this->redirect(['ticket/myjob']);
     }
 }
     

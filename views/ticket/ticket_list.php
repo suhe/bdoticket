@@ -13,7 +13,7 @@ $this->params['addUrl'] = 'ticket/order';
 	<div class="portlet"><!-- /Portlet -->
 	    <div class="portlet-heading dark">
 		<div class="portlet-title">
-		    <h4 class="text-danger"><?=Yii::$app->session->getFlash('msg')?></h4>
+		    <h4><i class="fa fa-file-o"></i> <?=Yii::t("app","all ticket")?></h4>
 		</div>
 		<div class="portlet-widgets">
 		    <a data-toggle="collapse" data-parent="#accordion" href="#basic"><i class="fa fa-chevron-down"></i></a>
@@ -27,6 +27,7 @@ $this->params['addUrl'] = 'ticket/order';
 		<div class="portlet-body">
 		    
 		    <div class="row">
+		    <div class="col-lg-12"><?=Yii::$app->session->getFlash('msg')?></div>
 			<div class="col-lg-12" style="margin-bottom:20px">
 			    <?php $form = ActiveForm::begin([
 			    'id' => 'menu-form',

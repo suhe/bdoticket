@@ -4,6 +4,6 @@ return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=dbtimesheet',
     'username' => 'root',
-    'password' => '',
+    'password' => 'mysql',
     'charset' => 'utf8',
 ];

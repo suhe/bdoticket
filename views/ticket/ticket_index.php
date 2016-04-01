@@ -2,7 +2,7 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use backend\components\Auth;
+use yii\helpers\Url;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app','my ticket'), 'url' => ['bpjs/form']];
 $this->params['addUrl'] = 'ticket/new';
@@ -13,7 +13,7 @@ $this->params['addUrl'] = 'ticket/new';
 	<div class="portlet"><!-- /Portlet -->
 	    <div class="portlet-heading dark">
 		<div class="portlet-title">
-		    <h4 class="text-danger"><?=Yii::$app->session->getFlash('msg')?></h4>
+		     <h4><i class="fa fa-newspaper-o"></i> <?=Yii::t("app","my ticket") ?></h4>
 		</div>
 		<div class="portlet-widgets">
 		    <a data-toggle="collapse" data-parent="#accordion" href="#basic"><i class="fa fa-chevron-down"></i></a>
@@ -25,8 +25,11 @@ $this->params['addUrl'] = 'ticket/new';
 	    
             <div id="basic" class="panel-collapse collapse in">
 		<div class="portlet-body">
-		    
 		    <div class="row">
+		    <div class="log-lg-12">
+		    	<?=Yii::$app->session->getFlash("message")?>
+		    </div>
+			
 			<div class="col-lg-12" style="margin-bottom:20px">
 			    <?php $form = ActiveForm::begin([
 			    'id' => 'menu-form',
@@ -89,11 +92,25 @@ $this->params['addUrl'] = 'ticket/new';
 				
 				['class'=>'yii\grid\ActionColumn',
 				 'controller'=>'ticket',
-				 'template'=>'{view}',
+				 'template'=>'{detail-view}',
 				 'buttons' => [
 				    'view' => function ($url,$data) {
 					return Html::a('<i class="fa fa-eye icon-only">'.$data->ticket_status.'</i>',$url,['class' => 'btn btn-inverse btn-xs',
 					]);
+				    },
+				    
+				    'detail-view' => function ($url,$data) {
+				    //return Html::a('<i class="fa fa-eye icon-only"></i>',$url,['class' => 'btn btn-inverse btn-xs',]);
+				    return '
+			    				<div class="dropdown">
+								  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-pencil icon-only"></i> '.Yii::t('app','edit').'
+								  <span class="caret"></span></button>
+								  <ul class="dropdown-menu">
+								    <li><a href="'.Url::to(['ticket/view','id'=>$data->ticket_id]).'"> <i class="fa fa-eye icon-only"></i> '.Yii::t('app','view').'</a></li>
+								    '.($data->ticket_status == 4 ? '<li><a href="'.Url::to(['ticket/remove','id'=>$data->ticket_id]).'"><i class="fa fa-trash icon-only"></i> '.Yii::t('app','remove').'</a></li>' : '').'
+								  </ul>
+								</div>
+			    			';
 				    },
 				    
 				    

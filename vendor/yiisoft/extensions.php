@@ -3,6 +3,24 @@
 $vendorDir = dirname(__DIR__);
 
 return array (
+  'vileosoft/phpexcel' => 
+  array (
+    'name' => 'vileosoft/phpexcel',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@yii/phpexcel' => $vendorDir . '/vileosoft/phpexcel',
+    ),
+  ),
+  'alexgx/yii2-phpexcel' => 
+  array (
+    'name' => 'alexgx/yii2-phpexcel',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@alexgx/phpexcel' => $vendorDir . '/alexgx/yii2-phpexcel',
+    ),
+  ),
   'yiisoft/yii2-swiftmailer' => 
   array (
     'name' => 'yiisoft/yii2-swiftmailer',
@@ -48,13 +66,13 @@ return array (
       '@yii/gii' => $vendorDir . '/yiisoft/yii2-gii',
     ),
   ),
-  'vileosoft/phpexcel' => 
+  'yiisoft/yii2-faker' => 
   array (
-    'name' => 'vileosoft/phpexcel',
+    'name' => 'yiisoft/yii2-faker',
     'version' => '9999999-dev',
     'alias' => 
     array (
-      '@yii/phpexcel' => $vendorDir . '/vileosoft/phpexcel',
+      '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
     ),
   ),
 );

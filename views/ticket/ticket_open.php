@@ -1,6 +1,7 @@
 <?php
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 $this->params['breadcrumbs'] = [
     ['label' => Yii::t('app','my ticket'),'url' => ['ticket/index']],
     ['label' => Yii::t('app','replies'),'url' => ['#']]
@@ -15,9 +16,12 @@ $this->params['addUrl'] = 'ticket/order';
 		    <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1">
 			<ul class="timeline">
 			    <li class="timeline-day">
-				<span class="label label-primary arrowed-in-right label-xlg">
-				    <?=Yii::$app->formatter->asDatetime($query->ticket_date,"php:d/m/Y H:i:s");?>
-				</span>
+					<span class="label label-primary arrowed-in-right label-xlg">
+					    <?=Yii::$app->formatter->asDatetime($query->ticket_date,"php:d/m/Y H:i:s");?>
+					</span>
+					<span class="label label-primary arrowed-in-right label-xlg">
+						 <a id="closed" style="color:#fff" href="#"> <i class="fa fa-close"></i>  <?=Yii::t("app","closed")?> </a>
+					</span>
 			    </li>
 			    <li class="timeline-event">
 				<div class="timeline-event-point"></div>
@@ -43,9 +47,9 @@ $this->params['addUrl'] = 'ticket/order';
 						    <p><?=$query->ticket_note?></p>
 						    <?php
 						       if($queryatt){
-							    foreach($queryatt as $row){
-								print '<p>'.\yii\helpers\Html::a(Yii::t('app','attachment'),$row['attachment_file'],['target'=>'_blank']).'</p>';
-							    }
+							    	foreach($queryatt as $row){
+										print '<p>'.\yii\helpers\Html::a(Yii::t('app','attachment'),$row['attachment_file'],['target'=>'_blank']).'</p>';
+							    	}
 						       }
 						    ?>
 						</div>
@@ -137,6 +141,7 @@ $this->params['addUrl'] = 'ticket/order';
 </div>
 
 <?php 
+$url = Url::to(["ticket/closed","id" => $query->ticket_id]);
 $js = <<<JS
 $('#form').on('beforeSubmit', function(e) {
     var form = $(this);
@@ -184,5 +189,14 @@ $('#form').on('beforeSubmit', function(e) {
 }).on('submit', function(e){
     e.preventDefault();
 });
+
+
+$('#closed').on('click', function(e) {
+	if (! confirm("Apakah anda yakin akan menutup tiket ini ? ")) return;
+	
+	var loc = window.location;
+	window.location = "$url";	
+});
+
 JS;
 $this->registerJs($js);

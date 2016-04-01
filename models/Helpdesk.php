@@ -4,8 +4,6 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
 
-
-
 class Helpdesk extends ActiveRecord {
     
     public $user_created;
@@ -20,6 +18,8 @@ class Helpdesk extends ActiveRecord {
     public $employee_name;
     public $role;
     
+    const ROLE_USER = 0;
+    const ROLE_HELPDESK = 1;
     
     public static function tableName(){
         return 'helpdesk';
@@ -27,9 +27,9 @@ class Helpdesk extends ActiveRecord {
 
     public function rules(){
         return [
-	    [['EmployeeFirstName','role_id'],'safe','on'=>['search']],
-	    [['employee_id','role_id'],'required','on'=>['insert']],
-	    [['employee_id'],'validateEmployee','on'=>['insert']]
+	    	[['EmployeeFirstName','role_id'],'safe','on'=>['search']],
+	    	[['employee_id','role_id'],'required','on'=>['insert']],
+	    	[['employee_id'],'validateEmployee','on'=>['insert']]
         ];    
     }
     
@@ -81,22 +81,28 @@ class Helpdesk extends ActiveRecord {
        
         return $dataProvider;
     }
-
     
-    public function getSave(){
-       if($this->validate()){
-	$model = new Helpdesk();
-	$model->employee_id  = $this->employee_id;
-	$model->role_id  = $this->role_id;
-	$model->insert();
-	return true;
-       }
-    }
+	public function getSave() {
+		if ($this->validate ()) {
+			$model = new Helpdesk ();
+			$model->employee_id = $this->employee_id;
+			$model->role_id = $this->role_id;
+			$model->insert ();
+			return true;
+		}
+	}
     
     public function findByID($employee_id){
-	return Helpdesk::find()
-        ->where(['employee_id' => $employee_id])
-	->one();
+		return Helpdesk::find()->where(['employee_id' => $employee_id])->one();
+    }
+    
+    public static function isUserType(){
+    	$employee_id = Yii::$app->user->getId();
+    	if(self::findOne(["employee_id" => $employee_id])) {
+    		return 1;
+    	} else {
+    		return 0;
+    	}
     }
     
     public function validateEmployee($attribute, $params){
@@ -108,19 +114,18 @@ class Helpdesk extends ActiveRecord {
         }
     }
     
-    public static function getDropdownListData($all=true){
-	$query = Helpdesk::find()
-        ->select(['*',"IF(role_id=1,'Leader','Staff') as role"])
-        ->from('helpdesk h')
-        ->join('inner join','employee e','e.employee_id = h.employee_id')
-	->all();
-	
-	$arr=[];
-	foreach($query as $row){
-	    $arr[$row->employee_id] = $row->EmployeeFirstName.' '.$row->EmployeeMiddleName.' '.$row->EmployeeLastName;
+    public static function getDropdownListData($all = true) {
+		$query = Helpdesk::find ()->select ( [ 
+				'*',
+				"IF(role_id=1,'Leader','Staff') as role" 
+		] )->from ( 'helpdesk h' )->join ( 'inner join', 'employee e', 'e.employee_id = h.employee_id' )->where(["role_id" => 2])->all ();
+		
+		$arr = [ ];
+		foreach ( $query as $row ) {
+			$arr [$row->employee_id] = $row->EmployeeFirstName . ' ' . $row->EmployeeMiddleName . ' ' . $row->EmployeeLastName;
+		}
+		if ($all == true)
+			$arr [0] = Yii::t ( 'app', 'all' );
+		return $arr;
 	}
-	if($all==true)
-	$arr[0] = Yii::t('app','all');
-	return $arr;
-    }
 }

@@ -52738,3 +52738,224 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1419925594.497
     'REQUEST_TIME' => 1419925594
 ]
+2016-04-01 08:57:11 [127.0.0.1][-][-][error][yii\db\Exception] exception 'PDOException' with message 'SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: NO)' in D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php:579
+Stack trace:
+#0 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(579): PDO->__construct('mysql:host=loca...', 'root', '', NULL)
+#1 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(529): yii\db\Connection->createPdoInstance()
+#2 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(836): yii\db\Connection->open()
+#3 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(823): yii\db\Connection->getMasterPdo()
+#4 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(216): yii\db\Connection->getSlavePdo()
+#5 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(831): yii\db\Command->prepare('<span class="ke...')
+#6 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(359): yii\db\Command->queryInternal('<span class="st...', '<span class="ke...')
+#7 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(198): yii\db\Command->queryAll()
+#8 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#9 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Schema.php(146): yii\db\mysql\Schema->loadTableSchema('<span class="st...')
+#10 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(294): yii\db\Schema->getTableSchema('<span class="st...')
+#11 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(327): yii\db\ActiveRecord::getTableSchema()
+#12 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(422): yii\db\ActiveRecord->attributes()
+#13 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(264): yii\db\BaseActiveRecord->hasAttribute('<span class="st...')
+#14 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\BaseYii.php(518): yii\db\BaseActiveRecord->__set('<span class="st...', '<span class="st...')
+#15 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Object.php(105): yii\BaseYii::configure(Object(app\models\Employee), '[<span class="s...')
+#16 D:\xampp\htdocs\bdoticket\controllers\SiteController.php(28): yii\base\Object->__construct('[<span class="s...')
+#17 [internal function]: app\controllers\SiteController->actionLogin()
+#18 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array('[<span class="t...', '[]')
+#19 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Controller.php(151): yii\base\InlineAction->runWithParams('[]')
+#20 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Module.php(455): yii\base\Controller->runAction('<span class="st...', '[]')
+#21 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\web\Application.php(84): yii\base\Module->runAction('<span class="st...', '[]')
+#22 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#23 D:\xampp\htdocs\bdoticket\web\index.php(13): yii\base\Application->run()
+#24 {main}
+
+Next exception 'yii\db\Exception' with message 'SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: NO)' in D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php:534
+Stack trace:
+#0 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(836): yii\db\Connection->open()
+#1 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(823): yii\db\Connection->getMasterPdo()
+#2 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(216): yii\db\Connection->getSlavePdo()
+#3 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(831): yii\db\Command->prepare('<span class="ke...')
+#4 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(359): yii\db\Command->queryInternal('<span class="st...', '<span class="ke...')
+#5 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(198): yii\db\Command->queryAll()
+#6 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#7 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Schema.php(146): yii\db\mysql\Schema->loadTableSchema('<span class="st...')
+#8 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(294): yii\db\Schema->getTableSchema('<span class="st...')
+#9 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(327): yii\db\ActiveRecord::getTableSchema()
+#10 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(422): yii\db\ActiveRecord->attributes()
+#11 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(264): yii\db\BaseActiveRecord->hasAttribute('<span class="st...')
+#12 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\BaseYii.php(518): yii\db\BaseActiveRecord->__set('<span class="st...', '<span class="st...')
+#13 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Object.php(105): yii\BaseYii::configure(Object(app\models\Employee), '[<span class="s...')
+#14 D:\xampp\htdocs\bdoticket\controllers\SiteController.php(28): yii\base\Object->__construct('[<span class="s...')
+#15 [internal function]: app\controllers\SiteController->actionLogin()
+#16 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array('[<span class="t...', '[]')
+#17 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Controller.php(151): yii\base\InlineAction->runWithParams('[]')
+#18 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Module.php(455): yii\base\Controller->runAction('<span class="st...', '[]')
+#19 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\web\Application.php(84): yii\base\Module->runAction('<span class="st...', '[]')
+#20 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#21 D:\xampp\htdocs\bdoticket\web\index.php(13): yii\base\Application->run()
+#22 {main}
+Additional Information:
+
+2016-04-01 08:57:09 [127.0.0.1][-][-][info][application] $_SERVER = [
+    'REDIRECT_MIBDIRS' => 'D:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'D:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'D:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'D:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'ticket.local'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0 FirePHP/0.7.4'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'id,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_X_INSIGHT' => 'activate'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'PATH' => 'C:\\Program Files\\ActiveState Komodo Edit 9\\;C:\\ProgramData\\Oracle\\Java\\javapath;C:\\Program Files\\Intel\\iCLS Client\\;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\Intel\\OpenCL SDK\\2.0\\bin\\x86;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\IPT;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\Program Files\\Lenovo\\Access Connections\\;C:\\Program Files\\Bitvise SSH Client;C:\\Program Data\\Universal Extractor;C:\\Program Data\\Universal Extractor\\bin;C:\\Program Files\\TortoiseSVN\\bin;C:\\Program Files\\Microsoft SQL Server\\80\\Tools\\BINN;C:\\Program Files\\Microsoft SQL Server\\100\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\100\\DTS\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\100\\Tools\\Binn\\VSShell\\Common7\\IDE\\;C:\\Program Files\\nodejs\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;D:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\GtkSharp\\2.12\\bin;C:\\Program Files\\OpenVPN\\bin;C:\\Program Files\\TortoiseGit\\bin;C:\\Program Files\\Java\\jdk1.8.0_40\\bin;C:\\Program Files\\WinAnt\\bin;C:\\Users\\BDO-IT\\AppData\\Roaming\\npm;C:\\App\\apache-maven-3.3.9\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.10 (Win32) OpenSSL/1.0.1i PHP/5.5.15 Server at ticket.local Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.10 (Win32) OpenSSL/1.0.1i PHP/5.5.15'
+    'SERVER_NAME' => 'ticket.local'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/xampp/htdocs/bdoticket'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/xampp/htdocs/bdoticket'
+    'SERVER_ADMIN' => 'admin@local'
+    'SCRIPT_FILENAME' => 'D:/xampp/htdocs/bdoticket/web/index.php'
+    'REMOTE_PORT' => '1220'
+    'REDIRECT_URL' => '/'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/'
+    'SCRIPT_NAME' => '/web/index.php'
+    'PHP_SELF' => '/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1459475828.938
+    'REQUEST_TIME' => 1459475828
+]
+2016-04-01 08:57:12 [127.0.0.1][-][-][error][yii\db\Exception] exception 'PDOException' with message 'SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: NO)' in D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php:579
+Stack trace:
+#0 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(579): PDO->__construct('mysql:host=loca...', 'root', '', NULL)
+#1 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(529): yii\db\Connection->createPdoInstance()
+#2 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(836): yii\db\Connection->open()
+#3 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(823): yii\db\Connection->getMasterPdo()
+#4 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(216): yii\db\Connection->getSlavePdo()
+#5 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(831): yii\db\Command->prepare('<span class="ke...')
+#6 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(359): yii\db\Command->queryInternal('<span class="st...', '<span class="ke...')
+#7 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(198): yii\db\Command->queryAll()
+#8 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#9 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Schema.php(146): yii\db\mysql\Schema->loadTableSchema('<span class="st...')
+#10 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(294): yii\db\Schema->getTableSchema('<span class="st...')
+#11 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(327): yii\db\ActiveRecord::getTableSchema()
+#12 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(422): yii\db\ActiveRecord->attributes()
+#13 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(264): yii\db\BaseActiveRecord->hasAttribute('<span class="st...')
+#14 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\BaseYii.php(518): yii\db\BaseActiveRecord->__set('<span class="st...', '<span class="st...')
+#15 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Object.php(105): yii\BaseYii::configure(Object(app\models\Employee), '[<span class="s...')
+#16 D:\xampp\htdocs\bdoticket\controllers\SiteController.php(28): yii\base\Object->__construct('[<span class="s...')
+#17 [internal function]: app\controllers\SiteController->actionLogin()
+#18 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array('[<span class="t...', '[]')
+#19 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Controller.php(151): yii\base\InlineAction->runWithParams('[]')
+#20 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Module.php(455): yii\base\Controller->runAction('<span class="st...', '[]')
+#21 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\web\Application.php(84): yii\base\Module->runAction('<span class="st...', '[]')
+#22 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#23 D:\xampp\htdocs\bdoticket\web\index.php(13): yii\base\Application->run()
+#24 {main}
+
+Next exception 'yii\db\Exception' with message 'SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: NO)' in D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php:534
+Stack trace:
+#0 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(836): yii\db\Connection->open()
+#1 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Connection.php(823): yii\db\Connection->getMasterPdo()
+#2 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(216): yii\db\Connection->getSlavePdo()
+#3 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(831): yii\db\Command->prepare('<span class="ke...')
+#4 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Command.php(359): yii\db\Command->queryInternal('<span class="st...', '<span class="ke...')
+#5 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(198): yii\db\Command->queryAll()
+#6 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\mysql\Schema.php(97): yii\db\mysql\Schema->findColumns(Object(yii\db\TableSchema))
+#7 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\Schema.php(146): yii\db\mysql\Schema->loadTableSchema('<span class="st...')
+#8 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(294): yii\db\Schema->getTableSchema('<span class="st...')
+#9 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\ActiveRecord.php(327): yii\db\ActiveRecord::getTableSchema()
+#10 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(422): yii\db\ActiveRecord->attributes()
+#11 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\db\BaseActiveRecord.php(264): yii\db\BaseActiveRecord->hasAttribute('<span class="st...')
+#12 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\BaseYii.php(518): yii\db\BaseActiveRecord->__set('<span class="st...', '<span class="st...')
+#13 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Object.php(105): yii\BaseYii::configure(Object(app\models\Employee), '[<span class="s...')
+#14 D:\xampp\htdocs\bdoticket\controllers\SiteController.php(28): yii\base\Object->__construct('[<span class="s...')
+#15 [internal function]: app\controllers\SiteController->actionLogin()
+#16 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array('[<span class="t...', '[]')
+#17 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Controller.php(151): yii\base\InlineAction->runWithParams('[]')
+#18 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Module.php(455): yii\base\Controller->runAction('<span class="st...', '[]')
+#19 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\web\Application.php(84): yii\base\Module->runAction('<span class="st...', '[]')
+#20 D:\xampp\htdocs\bdoticket\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#21 D:\xampp\htdocs\bdoticket\web\index.php(13): yii\base\Application->run()
+#22 {main}
+Additional Information:
+
+2016-04-01 08:57:12 [127.0.0.1][-][-][info][application] $_SERVER = [
+    'REDIRECT_REDIRECT_MIBDIRS' => 'D:/xampp/php/extras/mibs'
+    'REDIRECT_REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_REDIRECT_OPENSSL_CONF' => 'D:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_REDIRECT_STATUS' => '200'
+    'REDIRECT_MIBDIRS' => 'D:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'D:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'D:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'D:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'ticket.local'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0 FirePHP/0.7.4'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'id,en-US;q=0.7,en;q=0.3'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_X_INSIGHT' => 'activate'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'PATH' => 'C:\\Program Files\\ActiveState Komodo Edit 9\\;C:\\ProgramData\\Oracle\\Java\\javapath;C:\\Program Files\\Intel\\iCLS Client\\;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\Intel\\OpenCL SDK\\2.0\\bin\\x86;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\IPT;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\Program Files\\Lenovo\\Access Connections\\;C:\\Program Files\\Bitvise SSH Client;C:\\Program Data\\Universal Extractor;C:\\Program Data\\Universal Extractor\\bin;C:\\Program Files\\TortoiseSVN\\bin;C:\\Program Files\\Microsoft SQL Server\\80\\Tools\\BINN;C:\\Program Files\\Microsoft SQL Server\\100\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\100\\DTS\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\100\\Tools\\Binn\\VSShell\\Common7\\IDE\\;C:\\Program Files\\nodejs\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;D:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\GtkSharp\\2.12\\bin;C:\\Program Files\\OpenVPN\\bin;C:\\Program Files\\TortoiseGit\\bin;C:\\Program Files\\Java\\jdk1.8.0_40\\bin;C:\\Program Files\\WinAnt\\bin;C:\\Users\\BDO-IT\\AppData\\Roaming\\npm;C:\\App\\apache-maven-3.3.9\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.10 (Win32) OpenSSL/1.0.1i PHP/5.5.15 Server at ticket.local Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.10 (Win32) OpenSSL/1.0.1i PHP/5.5.15'
+    'SERVER_NAME' => 'ticket.local'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/xampp/htdocs/bdoticket'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/xampp/htdocs/bdoticket'
+    'SERVER_ADMIN' => 'admin@local'
+    'SCRIPT_FILENAME' => 'D:/xampp/htdocs/bdoticket/web/index.php'
+    'REMOTE_PORT' => '1222'
+    'REDIRECT_URL' => '/web/sizzle.min.map'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/sizzle.min.map'
+    'SCRIPT_NAME' => '/web/index.php'
+    'PHP_SELF' => '/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1459475832.556
+    'REQUEST_TIME' => 1459475832
+]

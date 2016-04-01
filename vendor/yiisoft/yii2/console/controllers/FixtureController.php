@@ -91,6 +91,15 @@ class FixtureController extends Controller
     public function actionLoad()
     {
         $fixturesInput = func_get_args();
+        if ($fixturesInput === []) {
+            $this->stdout($this->getHelpSummary() . "\n");
+
+            $helpCommand = Console::ansiFormat("yii help fixture", [Console::FG_CYAN]);
+            $this->stdout("Use $helpCommand to get usage info.\n");
+
+            return self::EXIT_CODE_NORMAL;
+        }
+
         $filtered = $this->filterFixtures($fixturesInput);
         $except = $filtered['except'];
 
@@ -367,7 +376,7 @@ class FixtureController extends Controller
     }
 
     /**
-     * Finds fixtures to be loaded, for example "User", if no fixtures were specified then all of them 
+     * Finds fixtures to be loaded, for example "User", if no fixtures were specified then all of them
      * will be searching by suffix "Fixture.php".
      * @param array $fixtures fixtures to be loaded
      * @return array Array of found fixtures. These may differ from input parameter as not all fixtures may exists.
@@ -423,8 +432,8 @@ class FixtureController extends Controller
     /**
      * Filters fixtures by splitting them in two categories: one that should be applied and not.
      * If fixture is prefixed with "-", for example "-User", that means that fixture should not be loaded,
-     * if it is not prefixed it is considered as one to be loaded. Returs array:
-     * 
+     * if it is not prefixed it is considered as one to be loaded. Returns array:
+     *
      * ~~~
      * [
      *     'apply' => [

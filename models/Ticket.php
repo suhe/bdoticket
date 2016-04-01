@@ -32,7 +32,7 @@ class Ticket extends ActiveRecord {
     public function rules(){
         return [
           [['ticket_id'],'safe'],
-          [['ticket_subject','ticket_type','ticket_note'],'required','on'=>['new_ticket']],
+          [['ticket_subject','ticket_category_id','ticket_note'],'required','on'=>['new_ticket']],
           [['ticket_status_string'],'string'],
           [['ticket_from_date','ticket_to_date','ticket_status'],'safe','on'=>'search'],
           [['ticket_helpdesk','ticket_handling'],'required','on'=>['set_helpdesk']],
@@ -51,7 +51,7 @@ class Ticket extends ActiveRecord {
             'ticket_status_string' => Yii::t('app','status'),
             'ticket_helpdesk' => Yii::t('app','helpdesk'),
             'ticket_handling' => Yii::t('app','handling'),
-            'ticket_type' => Yii::t('app','type'),
+            'ticket_category_id' => Yii::t('app','type'),
             'ticket_note' => Yii::t('app','note'),
             'helpdesk_name' => Yii::t('app','support'),
             'employee_id' => Yii::t('app','employee'),
@@ -108,7 +108,7 @@ class Ticket extends ActiveRecord {
             $model = new Ticket();
             $model->ticket_date = date('Y-m-d');
             
-            if($status==true){
+            if($status == true){
                 $employee = $this->employee_id;
                 $model->ticket_helpdesk = $this->ticket_helpdesk;
                 $model->ticket_handling = $this->ticket_handling;
@@ -123,7 +123,7 @@ class Ticket extends ActiveRecord {
             $model->employee_id = $employee;
             $model->ticket_usercomment = Yii::t('app/message','msg new ticket');
             $model->ticket_subject = $this->ticket_subject;
-            $model->ticket_type = $this->ticket_type;
+            $model->ticket_category_id = $this->ticket_category_id;
             $model->ticket_note = $this->ticket_note;
             $model->ticket_cdate = date('Y-m-d H:i:s');
             $model->ticket_cid = Yii::$app->user->getId();
@@ -134,20 +134,20 @@ class Ticket extends ActiveRecord {
     
     public function getTicketData($params,$employee_id=null,$status=null,$helpdesk=null){
         $sql=" SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
-        CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
-        CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,
-        CASE ticket_status
-            WHEN 4 THEN 'Baru'
-            WHEN 3 THEN 'Buka'
-            WHEN 2 THEN 'Proses'
-            WHEN 1 THEN 'Selesai'
-            WHEN 0 THEN 'Tutup'
-        END ticket_status_string,ticket_helpdesk
-        FROM ticket t
-        LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
-        LEFT JOIN employee hh on hh.employee_id = h.employee_id
-        INNER JOIN employee e on e.employee_id = t.employee_id
-        WHERE ticket_id>0 ";
+	        CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
+	        CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,ticket_status,
+	        CASE ticket_status
+	            WHEN 4 THEN 'Baru'
+	            WHEN 3 THEN 'Buka'
+	            WHEN 2 THEN 'Proses'
+	            WHEN 1 THEN 'Selesai'
+	            WHEN 0 THEN 'Tutup'
+	        END ticket_status_string,ticket_helpdesk
+	        FROM ticket t
+	        LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
+	        LEFT JOIN employee hh on hh.employee_id = h.employee_id		
+	        INNER JOIN employee e on e.employee_id = t.employee_id
+	        WHERE ticket_id>0 ";
         
         if($employee_id) $sql.= " AND t.employee_id=".$employee_id;
         if($status) $sql.= " AND ticket_status=".$status;
