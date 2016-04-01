@@ -3,6 +3,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
+use app\models\Ticket;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app','my ticket'), 'url' => ['bpjs/form']];
 $this->params['addUrl'] = 'ticket/new';
@@ -38,9 +39,9 @@ $this->params['addUrl'] = 'ticket/new';
 			    'options' => ['class' => 'form-inline pull-right','role' => 'form',],
 			    'fieldConfig' => ['template' => "{input}",]
 			    ]);?>
-			    <?=$form->field($model,'ticket_from_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014',],]) ?>
-			    <?=$form->field($model,'ticket_to_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014'],]) ?>
-			    <?=$form->field($model,'ticket_status')->dropDownList(Yii::$app->params['ticket_status'])?>
+			    <?=$form->field($model,'ticket_from_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date from')]);?>
+			    <?=$form->field($model,'ticket_to_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date to')]);?>
+			    <?=$form->field($model,'ticket_status')->dropDownList(Ticket::getListStatus())?>
              
 			    <div class="form-group ">
 				<?=Html::submitButton(Yii::t('app/backend','search'), ['class' => 'btn btn-primary btn-md','name' => 'search'])?>
@@ -130,26 +131,31 @@ $this->params['addUrl'] = 'ticket/new';
 </div> <!-- ENd of row -->
 
 <script>
-	//for tables checkbox demo
+	//for tables checkbox dem
     jQuery(function($) {
-	$('table th input:checkbox').on('click' , function(){
-	    var that = this;
-	    $(this).closest('table').find('tr > td:first-child input:checkbox')
-	    .each(function(){
-		this.checked = that.checked;
-		$(this).closest('tr').toggleClass('selected');
-	    });
-						
-	});
+    	$('.input-group.date').datepicker({
+            autoclose : true,
+         	format: "dd/mm/yyyy"
+       	});
+       	    
+		$('table th input:checkbox').on('click' , function(){
+		    var that = this;
+		    $(this).closest('table').find('tr > td:first-child input:checkbox')
+		    .each(function(){
+			this.checked = that.checked;
+			$(this).closest('tr').toggleClass('selected');
+		    });
+							
+		});
 	
-	$('.btn-pwd').click(function (e) {
-	    if (!confirm('<?=Yii::t('app/message','msg btn password')?>')) return false;
-	    return true;
-	});
+		$('.btn-pwd').click(function (e) {
+		    if (!confirm('<?=Yii::t('app/message','msg btn password')?>')) return false;
+		    return true;
+		});
 	
-	$('.btn-delete').click(function (e) {
-	    if (!confirm('<?=Yii::t('app/message','msg btn delete')?>')) return false;
-	    return true;
-	});
+		$('.btn-delete').click(function (e) {
+		    if (!confirm('<?=Yii::t('app/message','msg btn delete')?>')) return false;
+		    return true;
+		});
     });
 </script>

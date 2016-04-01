@@ -1,6 +1,8 @@
 <?php
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use app\models\Helpdesk;
+use app\models\Ticket;
 $this->params['breadcrumbs'] = [
     ['label' => Yii::t('app','report'),'url' => ['report']],
     ['label' => Yii::t('app','graphic report'),'url' => ['report/chart']]
@@ -14,7 +16,6 @@ use yii\web\JsExpression;
 	<!-- START YOUR CONTENT HERE -->
             <div class="portlet">
 		<div class="portlet-heading">
-		    
 		    <div class="portlet-title">
 			<h4 class="danger"><?=Yii::t('app','graphic report')?></h4>
 		    </div>
@@ -37,8 +38,8 @@ use yii\web\JsExpression;
                         ],
                         ]);?>
 			
-			<?=$form->field($model,'ticket_from_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014',],]) ?>
-			<?=$form->field($model,'ticket_to_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014'],]) ?>
+			<?=$form->field($model,'ticket_from_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date from')]);?>
+			<?=$form->field($model,'ticket_to_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date to')]);?>
 		    	
 			<div class="form-group " >
                             <div class="col-md-offset-1 col-md-11">
@@ -47,8 +48,7 @@ use yii\web\JsExpression;
                         </div>
                         <div class="clearfix"></div>
                         <?php ActiveForm::end() ?>
-			<div class="clearfix" style="margin-bottom:30px"></div>
-			
+						<div class="clearfix" style="margin-bottom:30px"></div>
 			
                         <?=Highcharts::widget([
                         'scripts' => [
@@ -60,39 +60,35 @@ use yii\web\JsExpression;
                                 'text' => Yii::t('app','chart performance').' '.Yii::t('app','periode').' '.(isset($params)?$model->ticket_from_date.' '.Yii::t('app','to').' '.$model->ticket_to_date:Yii::t('app','today')),
                             ],
                             'xAxis' => [
-                                'categories' => \app\models\Report::getHelpdeskList(),
+                                'categories' => Helpdesk::getLists(),
                             ],
                             
                             'series' => [
                                 [
-				    'type' => 'column',
-				    'name' => Yii::t('app','open ticket'),
-				    'data' => \app\models\Report::getHelpdeskChartData(3,4,$params),
-				],
-				[
-				    'type' => 'column',
-				    'name' => Yii::t('app','process'),
-				    'data' => \app\models\Report::getHelpdeskChartData(2,2,$params),
-				],
-				[
-				    'type' => 'column',
-				    'name' => Yii::t('app','finish'),
-				    'data' => \app\models\Report::getHelpdeskChartData(0,1,$params),
-				],
-				[
-				    'type' => 'spline',
-				    'name' => Yii::t('app','average'),
-				    'data' => \app\models\Report::getHelpdeskChartData(0,4,$params),
-				    'marker' => [
-					'lineWidth' => 2,
-					'lineColor' => new JsExpression('Highcharts.getOptions().colors[3]'),
-					'fillColor' => 'green',
-				    ],
-				],
+								    'type' => 'column',
+								    'name' => Yii::t('app','total ticket'),
+								    'data' => $model->getTotalTicketByHelpdesk($params),
+								],
+								
+								[
+								    'type' => 'column',
+								    'name' => Yii::t('app','closed'),
+								    'data' => $model->getClosedTicketByHelpdesk($params),
+								],
+								[
+								    'type' => 'spline',
+								    'name' => Yii::t('app','performance report'),
+								    'data' => $model->getTotalTicketByHelpdesk($params),
+								    'marker' => [
+									'lineWidth' => 2,
+									'lineColor' => new JsExpression('Highcharts.getOptions().colors[3]'),
+									'fillColor' => 'green',
+								    ],
+								],
                                 
                             ],
                         ]
-                    ]);?>
+                ]);?>
                          
 		    </div>
 		</div>
@@ -102,3 +98,14 @@ use yii\web\JsExpression;
 <style>
     .help-block{line-height:10px;}
 </style>
+
+<script>
+	//for tables checkbox dem
+    jQuery(function($) {
+    	$('.input-group.date').datepicker({
+            autoclose : true,
+         	format: "dd/mm/yyyy"
+       	});
+       	    
+    });
+</script>

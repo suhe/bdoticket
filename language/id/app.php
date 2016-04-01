@@ -1,5 +1,8 @@
 <?php
 return [ 
+		'all' => 'Semua',
+		'date from' => 'Dari tgl',
+		'date to' => 'Sampai tgl',
 		'page title' => 'Bdo Helpdesk',
 		'ticket' => 'Tiket',
 		'new ticket' => 'Buat Tiket Baru',
@@ -90,5 +93,10 @@ return [
 		'very less' => 'Sangat Kurang',
 		'rating' => 'Penilaian : ',
 		'remove' => 'Hapus',
-		'edit' => 'Edit' 
+		'edit' => 'Edit', 
+		'ticket list' => 'Daftar Antrian',
+		'total ticket' => 'Total Tiket',
+		'performance report' => 'Performance',
+		'ticket category report' => 'Kategori kerusakan',
+		
 ];

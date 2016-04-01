@@ -10,8 +10,8 @@ AppAsset::register($this);
 AppAssetIE8::register($this);
 AppAssetIE9::register($this);
 $totalLog = count(\app\models\TicketLog::getNewTicketLogData());
-$totalLog2=count(\app\models\Ticket::getHelpdeskTicketData(3));
-$totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
+$totalLog2 =count(\app\models\Ticket::getHelpdeskTicketData(3));
+$totalLog3 =count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -240,15 +240,20 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 							  ]
 							],
 							[
-							  'label' => Yii::t('app','report'),
+							  'label' => Yii::t('app','graphic report'),
 							  'url'   => 'ticket',
 							  'icon'  => 'fa fa-file',
 							  'sub'   => [
 							    [
-							      'label'=>Yii::t('app','graphic report'),
-							      'url'  => 'report/chart',
-							      'icon' => 'fa fa-area-chart'
+							      	'label'=>Yii::t('app','performance report'),
+							      	'url'  => 'report/performance',
+							      	'icon' => 'fa fa-area-chart'
 							    ],
+							  	[
+							  		'label'=>Yii::t('app','ticket category report'),
+							  		'url'  => 'report/category',
+							  		'icon' => 'fa fa-area-chart'
+							  	],
 							    	
 							  ]
 							],
@@ -285,6 +290,11 @@ $totalLog3=count(\app\models\Ticket::getHelpdeskNewTicketData(4));
 							      'url'  => 'ticket/new',
 							      'icon' => 'fa fa-plus'
 							    ],
+							  	[
+							  		'label'=>Yii::t('app','ticket list'),
+							  		'url'  => 'ticket/request',
+							  		'icon' => 'fa fa-list'
+							  	],
 							    [
 							      'label'=>Yii::t('app','my ticket'),
 							      'url'  => 'ticket/index',

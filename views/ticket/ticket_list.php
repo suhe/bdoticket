@@ -2,7 +2,7 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use backend\components\Auth;
+use app\models\Ticket;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app','all ticket'), 'url' => ['ticket/list']];
 $this->params['addUrl'] = 'ticket/order';
@@ -36,10 +36,10 @@ $this->params['addUrl'] = 'ticket/order';
 			    'options' => ['class' => 'form-inline pull-right','role' => 'form',],
 			    'fieldConfig' => ['template' => "{input}",]
 			    ]);?>
-			    <?=$form->field($model,'ticket_from_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014',],]) ?>
-			    <?=$form->field($model,'ticket_to_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014'],]) ?>
-			    <?=$form->field($model,'ticket_status')->dropDownList(Yii::$app->params['ticket_status'])?>
-             
+			    <?=$form->field($model,'ticket_from_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date from')]);?>
+			    <?=$form->field($model,'ticket_to_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date to')]);?>
+			    <?=$form->field($model,'ticket_status')->dropDownList(Ticket::getListStatus())?>
+			    
 			    <div class="form-group ">
 				<?=Html::submitButton(Yii::t('app/backend','search'), ['class' => 'btn btn-primary btn-md','name' => 'search'])?>
 			    </div> 

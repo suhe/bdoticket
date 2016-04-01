@@ -27,7 +27,7 @@ use yii\widgets\DetailView;
             <div id="basic" class="panel-collapse collapse in">
 		<div class="portlet-body">
 		    <?=DetailView::widget([
-			'model' => $model,
+			'model' => $ticket,
 			'attributes' => [
 			    'ticket_id',
 			    'employee_name',
@@ -40,9 +40,9 @@ use yii\widgets\DetailView;
 		    
 		    <br/>
 		    <?php
-		    if($queryatt){
-			foreach($queryatt as $row){
-			    print '<p>'.\yii\helpers\Html::a(Yii::t('app','attachment view'),$row['attachment_file'],['target'=>'_blank']).'</p>';
+		    if($attachment){
+			foreach($attachment as $key => $row){
+			    print \yii\helpers\Html::a(Yii::t('app','attachment')."_".($key + 1),$row['attachment_file'],['target'=>'_blank']).' ';
 			}
 		    }
 		    ?>

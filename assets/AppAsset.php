@@ -27,11 +27,13 @@ class AppAsset extends AssetBundle
         'assets/css/plugins/gritter/jquery.gritter.css',
         'assets/css/themes/style.css',
         'assets/css/only-for-demos.css',
+    	'assets/css/bootstrap-datepicker.min.css',
     ];
       
     public $js = [
         'assets/js/jquery.min.js',
         'assets/js/bootstrap.min.js',
+    	'assets/js/bootstrap-datepicker.min.js',
         //'assets/js/plugins/slimscroll/jquery.slimscroll.min.js',
         //'assets/js/plugins/pace/pace.min.js',
         //'assets/js/plugins/jqueryui/jquery-ui-1.10.4.custom.min.js',

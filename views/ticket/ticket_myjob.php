@@ -35,8 +35,9 @@ $this->params['addUrl'] = 'ticket/order';
 			    'options' => ['class' => 'form-inline pull-right','role' => 'form',],
 			    'fieldConfig' => ['template' => "{input}",]
 			    ]);?>
-			    <?=$form->field($model,'ticket_from_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014',],]) ?>
-			    <?=$form->field($model,'ticket_to_date')->widget(yii\jui\DatePicker::className(),['dateFormat'=>'dd/MM/yyyy','clientOptions' => ['defaultDate' => '24/01/2014'],]) ?>
+			    <?=$form->field($model,'ticket_from_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date from')]);?>
+			    <?=$form->field($model,'ticket_to_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date to')]);?>
+			    
 			    <?=$form->field($model,'ticket_status')->dropDownList(Yii::$app->params['ticket_status'])?>
              
 			    <div class="form-group ">

@@ -42,6 +42,13 @@ $this->params['addUrl'] = 'ticket/new';
 					    <div id="no-border" class="panel-collapse collapse in">
 						<div class="portlet-body">
 						    <p><?=$query->ticket_note?></p>
+						    <?php
+						       if($attacthment) {
+							    	foreach($attacthment as $key => $row){
+										print \yii\helpers\Html::a(Yii::t("app","attachment")."_".($key + 1),$row['attachment_file'],['target'=>'_blank']) . " ";
+							    	}
+						       }
+						    ?>
 						</div>
 					    </div>
 					</div>

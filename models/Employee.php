@@ -52,22 +52,6 @@ class Employee extends ActiveRecord implements IdentityInterface {
         return $this->hasOne(Department::className(),['department_id'=>'department_id']);
     }
     
-    
-    public function getEmployeeBpjs($status=FALSE){
-        $Employee = Employee::find()
-        ->select(["CONCAT(E.EmployeeFirstName,' ',E.EmployeeMiddleName,' ',E.EmployeeLastName) as EmployeeName",
-        'E.EmployeeID','D.department',"(SELECT count(employee_id) FROM bpjs_employee B WHERE B.employee_id=E.employee_id) as EmployeeStatus","E.EmployeeTitle"
-        ])
-        ->from('employee E')
-        ->Join('inner join','sys_user U','U.employee_id=E.employee_id')
-        ->Join('inner join','department D','D.department_id=E.department_id')
-        ->where(['U.user_active'=>1])
-        ->orderBy("E.EmployeeFirstName,E.EmployeeMiddleName,E.EmployeeLastName")
-        ->limit(5)
-        ->all();
-        return $Employee;
-    }
-    
     /**
      * abstract model identity interface $app->user->login
      * findIdentity , findIdentityByAccessToken , getId , getAuthKey , validateAuthKey
@@ -127,7 +111,7 @@ class Employee extends ActiveRecord implements IdentityInterface {
         }
     }
     
-    public function getEmployeeDropdownList(){
+    public static function getEmployeeDropdownList(){
         $arr = [];
         $data = Employee::find()
         ->from('employee e')

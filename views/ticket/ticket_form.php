@@ -54,10 +54,9 @@ $this->params['addUrl'] = 'ticket/new';
 				],
 				'clientEvents' => [
 					'complete' => "function(file){console.log(file)}",
-					'removedfile' => "function(file){
-							   
-							    alert(file.name + ' telah dihapus');
-							 }",
+					'removedfile' => "function(file) {	   
+						 alert(file.name + ' telah dihapus');
+					}",
 				]
 			    ]);?>
 			</div>

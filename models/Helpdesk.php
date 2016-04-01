@@ -128,4 +128,21 @@ class Helpdesk extends ActiveRecord {
 			$arr [0] = Yii::t ( 'app', 'all' );
 		return $arr;
 	}
+	
+	
+	public static function getLists() {
+		$query = \app\models\Helpdesk::find()
+		->select("e.EmployeeFirstName")
+		->from('helpdesk h')
+		->join('inner join','employee e','e.employee_id = h.employee_id')
+		->where(['NOT IN', 'role_id', [1]])
+		->orderBy('e.EmployeeFirstName')
+		->all();
+	
+		$arr=[];
+		foreach($query as $row){
+			$arr[]=$row->EmployeeFirstName;
+		}
+		return $arr;
+	}
 }

@@ -17,23 +17,25 @@ $this->params['addUrl'] = 'ticket/order';
 			<ul class="timeline">
 			    <li class="timeline-day">
 					<span class="label label-primary arrowed-in-right label-xlg">
-					    <?=Yii::$app->formatter->asDatetime($query->ticket_date,"php:d/m/Y H:i:s");?>
+					    <?=Yii::$app->formatter->asDatetime($val->ticket_date,"php:d/m/Y H:i:s");?>
 					</span>
+					<?php if($val->ticket_status == 0): ?>
 					<span class="label label-primary arrowed-in-right label-xlg">
 						 <a id="closed" style="color:#fff" href="#"> <i class="fa fa-close"></i>  <?=Yii::t("app","closed")?> </a>
 					</span>
+					<?php endif?>
 			    </li>
 			    <li class="timeline-event">
 				<div class="timeline-event-point"></div>
 				<div class="timeline-event-wrap">
 				    <div class="timeline-event-time">
-					<i class="fa fa-comments bigger-130"></i> <?=$query->ticket_usercomment.' '.Yii::t('app','from').' '.$query->EmployeeFirstName ?> <?=!$logQuery?', '.Yii::t('app/message','msg not reply'):''?>
+					<i class="fa fa-comments bigger-130"></i> <?=$val->ticket_usercomment.' '.Yii::t('app','from').' '.$val->EmployeeFirstName ?> <?=!$logs?', '.Yii::t('app/message','msg not reply'):''?>
 				    </div>
 				    <div class="timeline-event-massage no-border no-padding">
 					<div class="portlet">
 					    <div class="portlet-heading inverse">
 						<div class="portlet-title">
-						    <h4><?=$query->ticket_subject;?></h4>
+						    <h4><?=$val->ticket_subject;?></h4>
 						</div>
 						<div class="portlet-widgets">
 						    <a href="javascript:;"><i class="fa fa-refresh"></i></a>
@@ -44,11 +46,11 @@ $this->params['addUrl'] = 'ticket/order';
 					    </div>
 					    <div id="no-border" class="panel-collapse collapse in">
 						<div class="portlet-body">
-						    <p><?=$query->ticket_note?></p>
+						    <p><?=$val->ticket_note?></p>
 						    <?php
-						       if($queryatt){
-							    	foreach($queryatt as $row){
-										print '<p>'.\yii\helpers\Html::a(Yii::t('app','attachment'),$row['attachment_file'],['target'=>'_blank']).'</p>';
+						       if($attachtment){
+							    	foreach($attachtment as $key => $row){
+										print \yii\helpers\Html::a(Yii::t('app','attachment')."_".($key + 1),$row['attachment_file'],['target'=>'_blank']).' ';
 							    	}
 						       }
 						    ?>
@@ -60,7 +62,7 @@ $this->params['addUrl'] = 'ticket/order';
 				</div>
 			    </li>
 																		
-			    <?php foreach($logQuery as $row){?>
+			    <?php foreach($logs as $row){?>
 			    <li class="timeline-day">
 				<span class="label label-inverse arrowed-in-right label-xlg">
 				    <?=$row->log_date?>
@@ -90,7 +92,7 @@ $this->params['addUrl'] = 'ticket/order';
 				
 			    </div>
 			    
-			    <?php if($query->ticket_status!=0){?>									
+			    <?php if($val->ticket_status!=0){?>									
 			    <li class="timeline-day form-comment">
 				<span class="label label-danger arrowed-in-right label-xlg">
 				    <?=date('d/m/Y H:i:s')?>
@@ -115,7 +117,7 @@ $this->params['addUrl'] = 'ticket/order';
 					],
 					]);?>
 					<?=$form->field($model,'log_desc')->textarea(['rows' => 2])?>
-					<?php if($query->ticket_status==1){ ?>
+					<?php if($val->ticket_status==1){ ?>
 					<div class="col-lg-12">
 					    <?=$form->field($model,'log_status')->checkbox(['value'=>1])?>
 					</div>
@@ -141,7 +143,7 @@ $this->params['addUrl'] = 'ticket/order';
 </div>
 
 <?php 
-$url = Url::to(["ticket/closed","id" => $query->ticket_id]);
+$url = Url::to(["ticket/closed","id" => $val->ticket_id]);
 $js = <<<JS
 $('#form').on('beforeSubmit', function(e) {
     var form = $(this);

@@ -37,6 +37,7 @@ return [
 		'msg email information create a new ticket' => 'tiket support baru telah dibuat di tiket.bdoindonesia.com , berikut details tiket  :',
 		'msg natal & happy new year' => 'Selamat Hari Raya Natal & Tahun Baru ',
 		'msg ticket reply' => 'Balasan Tiket',
+		'msg ticket has been deleted' => 'Ticket has been deleted',
 		'msg ticket set helpdesk' => 'Set Helpdesk Support',
 		'msg user reply' => 'Balasan User',
 		'msg support reply' => 'Balasan Support',

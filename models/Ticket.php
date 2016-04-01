@@ -1,8 +1,9 @@
 <?php
 namespace app\models;
-use yii;
+use Yii;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
+use app\models\TicketAttachment;
 
 /**
  * Ticket Status
@@ -36,7 +37,7 @@ class Ticket extends ActiveRecord {
           [['ticket_status_string'],'string'],
           [['ticket_from_date','ticket_to_date','ticket_status'],'safe','on'=>'search'],
           [['ticket_helpdesk','ticket_handling'],'required','on'=>['set_helpdesk']],
-          [['ticket_subject','ticket_type','ticket_note','employee_id','ticket_helpdesk','ticket_handling'],'required','on'=>['order_ticket']],
+          [['ticket_subject','ticket_category_id','ticket_note','employee_id','ticket_helpdesk','ticket_handling'],'required','on'=>['order_ticket']],
           [['total'],'integer'],
           [['ticket_from_date','ticket_to_date'],'safe','on'=>'report'],
         ];
@@ -84,6 +85,17 @@ class Ticket extends ActiveRecord {
         return $string;
     }
     
+    public static function getListStatus() {
+    	return [
+    		null => Yii::t("app","all"),
+    		0 => Yii::t("app","closed"),
+    		1 => Yii::t("app","finish"),
+    		2 => Yii::t("app","progress"),
+    		3 => Yii::t("app","open"),
+    		4 => Yii::t("app","new"),
+    	];
+    }
+    
     public static function getCheckId($id){
         $query = Ticket::findOne($id);
         if(!$query)
@@ -91,36 +103,14 @@ class Ticket extends ActiveRecord {
         return true;
     }
     
-    public function getRelationId(){
-        $query = Ticket::find()
-        ->select(['MAX(ABS(ticket_id)) as id'])
-        ->where(['ticket_cid'=>Yii::$app->user->getId()])
-        ->one();
-        if($query)
-          $id = $query->id;
-        else
-           $id = 0;
-        return $id;   
-    }
-    
-    public function getSave($status=false){
-        if($this->validate()){
+    public function getSave($is_helpdesk_fill = false){
+        if($this->validate()) {
             $model = new Ticket();
             $model->ticket_date = date('Y-m-d');
-            
-            if($status == true){
-                $employee = $this->employee_id;
-                $model->ticket_helpdesk = $this->ticket_helpdesk;
-                $model->ticket_handling = $this->ticket_handling;
-                $model->ticket_status = $this->open;
-            }    
-            else {
-                $employee = Yii::$app->user->getId();
-                $model->ticket_status = $this->new;
-            }
-            
-            
-            $model->employee_id = $employee;
+            $model->employee_id = $is_helpdesk_fill == true ? $this->employee_id : Yii::$app->user->getId() ;
+            $model->ticket_helpdesk = $is_helpdesk_fill == true ? $this->ticket_helpdesk : null;
+            $model->ticket_handling = $is_helpdesk_fill == true ? $this->ticket_handling : null;
+            $model->ticket_status = $is_helpdesk_fill == true ?  $this->open : $this->new;
             $model->ticket_usercomment = Yii::t('app/message','msg new ticket');
             $model->ticket_subject = $this->ticket_subject;
             $model->ticket_category_id = $this->ticket_category_id;
@@ -128,32 +118,34 @@ class Ticket extends ActiveRecord {
             $model->ticket_cdate = date('Y-m-d H:i:s');
             $model->ticket_cid = Yii::$app->user->getId();
             $model->insert();
+  			//update if attachment
+            TicketAttachment::updateAll(['ticket_id' => $model->ticket_id], ['ticket_id' => 0 ,'ticket_md5' => md5(Yii::$app->user->getId())]);
             return true;
         }
     }
     
-    public function getTicketData($params,$employee_id=null,$status=null,$helpdesk=null){
-        $sql=" SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
-	        CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
-	        CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,ticket_status,
-	        CASE ticket_status
-	            WHEN 4 THEN 'Baru'
-	            WHEN 3 THEN 'Buka'
-	            WHEN 2 THEN 'Proses'
-	            WHEN 1 THEN 'Selesai'
-	            WHEN 0 THEN 'Tutup'
-	        END ticket_status_string,ticket_helpdesk
-	        FROM ticket t
-	        LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
-	        LEFT JOIN employee hh on hh.employee_id = h.employee_id		
-	        INNER JOIN employee e on e.employee_id = t.employee_id
-	        WHERE ticket_id>0 ";
+    public function getAllDataProvider($params,$employee_id = null,$status = null,$helpdesk = null){
+        $sql = "SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
+	        	CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
+	        	CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,ticket_status,
+	        	CASE ticket_status
+	            	WHEN 4 THEN '".Yii::t("app","new")."'
+	            	WHEN 3 THEN '".Yii::t("app","open")."'
+	            	WHEN 2 THEN '".Yii::t("app","progress")."'
+	            	WHEN 1 THEN '".Yii::t("app","finish")."'
+	            	WHEN 0 THEN '".Yii::t("app","closed")."'
+		        END ticket_status_string,ticket_helpdesk
+		        FROM ticket t
+		        LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
+		        LEFT JOIN employee hh on hh.employee_id = h.employee_id		
+		        INNER JOIN employee e on e.employee_id = t.employee_id
+		        WHERE e.employee_id > 0 ";
         
         if($employee_id) $sql.= " AND t.employee_id=".$employee_id;
         if($status) $sql.= " AND ticket_status=".$status;
         if($helpdesk) $sql.= " AND ticket_helpdesk=".$helpdesk;
         
-        if ($this->load($params) && $this->ticket_status)
+        if ($this->load($params) && $this->ticket_status != "")
             $sql.=" AND ticket_status = ".$this->ticket_status; 
         
         if ($this->load($params) && $this->ticket_from_date)
@@ -162,7 +154,7 @@ class Ticket extends ActiveRecord {
         if ($this->load($params) && $this->ticket_to_date)
             $sql.=" AND ticket_date <= '".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_to_date)."'";
         
-        $sql.=" ORDER BY ABS(ticket_id) DESC ";    
+        $sql.=" ORDER BY ticket_cdate ASC ";    
         $query = Ticket::findBySql($sql);
         $countQuery = count($query->all());
         $dataProvider = new ActiveDataProvider([
@@ -173,6 +165,35 @@ class Ticket extends ActiveRecord {
             ]    
         ]);
         return $dataProvider;
+    }
+    
+    public function getAllRequestDataProvider($params){
+    	$sql = 
+    		"SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
+	        CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
+	        CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,ticket_status,
+	        CASE ticket_status
+	           	WHEN 4 THEN '".Yii::t("app","new")."'
+	           	WHEN 3 THEN '".Yii::t("app","open")."'
+	           	WHEN 2 THEN '".Yii::t("app","progress")."'
+	           	WHEN 1 THEN '".Yii::t("app","finish")."'
+	           	WHEN 0 THEN '".Yii::t("app","closed")."'
+		     END ticket_status_string,ticket_helpdesk
+		     FROM ticket t
+		     LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
+		     LEFT JOIN employee hh on hh.employee_id = h.employee_id
+		     INNER JOIN employee e on e.employee_id = t.employee_id
+		     WHERE t.ticket_status > 0 order by t.ticket_cdate asc";
+    	$query = Ticket::findBySql($sql);
+    	$countQuery = count($query->all());
+    	$dataProvider = new ActiveDataProvider([
+    		'query' => $query,
+    		'totalCount' => $countQuery,
+    		'pagination' =>[
+    			'pageSize' => Yii::$app->params['per_page'],
+    		]
+    	]);
+    	return $dataProvider;
     }
     
     public function getTicketSingleData($id){
@@ -238,5 +259,65 @@ class Ticket extends ActiveRecord {
         ->where(['ticket_status'=>$status,'ticket_helpdesk'=>Yii::$app->user->getId()])
         ->all();
         return $query;
+    }
+    
+    public function getTotalTicketByHelpdesk($params) {
+    	$sql = "
+    			SELECT (SELECT COUNT(ticket_id) FROM ticket t WHERE t.ticket_helpdesk = h.`employee_id` 
+		    			AND (ticket_date >='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_from_date)."' AND  ticket_date <='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_to_date)."' )		
+		    			) as total
+		    	FROM helpdesk h
+		    	INNER JOIN employee e ON e.`employee_id`= h.`employee_id`				
+		    	WHERE h.`role_id` > 1
+		    	ORDER BY CONCAT(e.EmployeeFirstName) ASC								
+    	";
+    	$rows = self::findBySql($sql)->all();
+    	$data = [];
+    	 
+    	foreach($rows as $key => $row){
+    		$data[] = (int) $row->total;
+    	}
+    	return $data;
+    }
+    
+    public function getClosedTicketByHelpdesk($params) {
+    	$sql = "
+    			SELECT (SELECT COUNT(ticket_id) FROM ticket t WHERE t.ticket_helpdesk = h.`employee_id` and ticket_status = 0 and ticket_status_helpdesk = 0 
+		    			AND (ticket_date >='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_from_date)."' AND  ticket_date <='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_to_date)."' )
+		    			) as total
+		    	FROM helpdesk h
+		    	INNER JOIN employee e ON e.`employee_id`= h.`employee_id`
+		    	WHERE h.`role_id` > 1
+		    	ORDER BY CONCAT(e.EmployeeFirstName) ASC
+    	";
+    	$rows = self::findBySql($sql)->all();
+    	$data = [];
+    
+    	foreach($rows as $key => $row){
+    		$data[] = (int) $row->total;
+    	}
+    	return $data;
+    }
+    
+    public function getTotalTicketByCategory($params) {
+    	$sql = "
+    			SELECT (SELECT COUNT(ticket.ticket_id) FROM ticket WHERE ticket.ticket_category_id = ticket_categories.id 
+		    			AND ticket_date >='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_from_date)."' 
+		    			AND  ticket_date <='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_to_date)."' 
+		    			) as total
+		    	FROM ticket_categories
+		    	order by (select count(ticket_id) from ticket 
+						where ticket.ticket_category_id = ticket_categories.id
+						AND ticket.ticket_date >='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_from_date)."' 
+						AND ticket.ticket_date <='".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_to_date)."'
+				) desc	
+    	";
+    	$rows = self::findBySql($sql)->all();
+    	$data = [];
+    
+    	foreach($rows as $key => $row){
+    		$data[] = (int) $row->total;
+    	}
+    	return $data;
     }
 }

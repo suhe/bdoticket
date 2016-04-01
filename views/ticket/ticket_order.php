@@ -1,6 +1,8 @@
 <?php
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use app\models\TicketCategory;
+
 $this->params['breadcrumbs'] = [
     ['label' => Yii::t('app','my ticket'),'url' => ['ticket/index']],
     ['label' => Yii::t('app','new ticket'),'url' => ['ticket/order']]
@@ -37,7 +39,7 @@ $this->params['addUrl'] = 'ticket/order';
 			
 			<?=$form->field($model,'employee_id')->dropDownList($dropDownEmployee,['class'=>'col-lg-12',])?>
 			<?=$form->field($model,'ticket_subject')->textInput();?>
-			<?=$form->field($model,'ticket_type')->dropDownList(Yii::$app->params['ticket_type'],['class'=>'col-lg-12',])?>
+			<?=$form->field($model,'ticket_category_id')->dropDownList(TicketCategory::lists("name","id"),['class'=>'col-lg-12',])?>
 			<?=$form->field($model,'ticket_note')->textarea(['rows' => 8])?>
 			<?=$form->field($model,'ticket_helpdesk')->dropDownList($dropDownHelpdesk,['class'=>'col-lg-12',])?>
 			<?=$form->field($model,'ticket_handling')->textInput();?>
