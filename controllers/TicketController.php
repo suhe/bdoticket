@@ -266,7 +266,7 @@ class TicketController extends Controller {
      * @return \yii\web\Response
      */
     public function actionClosed($id) {
-    	$ticket = Ticket::findOne($id);
+    	$ticket = Ticket::findOne(["ticket_id" => $id]);
     	if($ticket->ticket_status == 0) {
     		Ticket::updateAll(['ticket_status_helpdesk' => 0], ['ticket_id' => $id]);
     	}

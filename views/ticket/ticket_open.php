@@ -3,7 +3,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
 $this->params['breadcrumbs'] = [
-    ['label' => Yii::t('app','my ticket'),'url' => ['ticket/index']],
+    ['label' => Yii::t('app','my ticket'),'url' => ['ticket/myjob']],
     ['label' => Yii::t('app','replies'),'url' => ['#']]
 ];
 $this->params['addUrl'] = 'ticket/order';
@@ -19,7 +19,7 @@ $this->params['addUrl'] = 'ticket/order';
 					<span class="label label-primary arrowed-in-right label-xlg">
 					    <?=Yii::$app->formatter->asDatetime($val->ticket_date,"php:d/m/Y H:i:s");?>
 					</span>
-					<?php if($val->ticket_status == 0): ?>
+					<?php if($val->ticket_status == 0 && $val->ticket_status_helpdesk == 1 ): ?>
 					<span class="label label-primary arrowed-in-right label-xlg">
 						 <a id="closed" style="color:#fff" href="#"> <i class="fa fa-close"></i>  <?=Yii::t("app","closed")?> </a>
 					</span>

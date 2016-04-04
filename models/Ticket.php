@@ -22,8 +22,10 @@ class Ticket extends ActiveRecord {
     public $ticket_to_date;
     public $ticket_status_string;
     public $helpdesk_name;
+    public $helpdesk_email;
     public $employee_name;
     public $EmployeeFirstName;
+    public $EmployeeEmail;
     public $total;
 
     public static function tableName(){
@@ -124,16 +126,39 @@ class Ticket extends ActiveRecord {
         }
     }
     
+    public function getAllData($params = array()) {
+    	$query = self::find()->from("ticket t")
+    	->join('inner join','employee e','e.employee_id=t.employee_id')
+    	->join("inner join","ticket_categories tc","tc.id =  t.ticket_category_id")
+    	->join('left join','employee h','h.employee_id = t.ticket_helpdesk')
+    	->select(["t.ticket_id","e.EmployeeFirstName","e.EmployeeEmail","DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date","ticket_subject",
+    			"e.EmployeeFirstName","tc.name as ticket_type","ticket_note","h.EmployeeFirstName as helpdesk_name","h.EmployeeEmail as helpdesk_email",
+    			"DATE_FORMAT(t.ticket_udate,'%d/%m/%Y') as ticket_udate","ticket_rating"
+    	]); 
+    	
+    	if(isset($params["ticket_status"])) {
+    		$query = $query->where(["ticket_status" => $params["ticket_status"]]);
+    	}
+    	
+    	if(isset($params["ticket_status_helpdesk"])) {
+    		$query = $query->where(["ticket_status_helpdesk" => $params["ticket_status_helpdesk"]]);
+    	}
+    	return $query->all();	
+    }
+    
+   
+    
     public function getAllDataProvider($params,$employee_id = null,$status = null,$helpdesk = null){
         $sql = "SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
 	        	CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
 	        	CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,ticket_status,
-	        	CASE ticket_status
-	            	WHEN 4 THEN '".Yii::t("app","new")."'
-	            	WHEN 3 THEN '".Yii::t("app","open")."'
-	            	WHEN 2 THEN '".Yii::t("app","progress")."'
-	            	WHEN 1 THEN '".Yii::t("app","finish")."'
-	            	WHEN 0 THEN '".Yii::t("app","closed")."'
+	        	CASE 
+	            	WHEN ticket_status = 4 THEN '".Yii::t("app","new")."'
+	            	WHEN ticket_status = 3 THEN '".Yii::t("app","open")."'
+	            	WHEN ticket_status = 2 THEN '".Yii::t("app","progress")."'
+	            	WHEN ticket_status = 1 THEN '".Yii::t("app","finish")."'
+	            	WHEN ticket_status = 0 AND ticket_status_helpdesk = 1 THEN '".Yii::t("app","closed")." (50%) '
+	            	WHEN ticket_status = 0 AND ticket_status_helpdesk = 0 THEN '".Yii::t("app","closed")." (100%) '		
 		        END ticket_status_string,ticket_helpdesk
 		        FROM ticket t
 		        LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk

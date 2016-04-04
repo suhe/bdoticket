@@ -6,12 +6,17 @@ use yii\data\ActiveDataProvider;
 use app\models\Ticket;
 
 class TicketLog extends ActiveRecord {
-    
+    public $ticket_subject;
     public $ticket_bulk;
     public $EmployeeFirstName;
     public $log_status;
     public $log_odate;
     public $ticket_rating;
+    public $employee_from_name;
+    public $employee_from_email;
+    public $employee_to_name;
+    public $employee_to_email;
+    
 
     public static function tableName(){
         return 'ticket_log';
@@ -90,10 +95,21 @@ class TicketLog extends ActiveRecord {
         return TicketLog::find()
         ->select(['*',"DATE_FORMAT(log_date,'%d/%m/%Y %H:%m:%s') as log_date","DATE_FORMAT(log_date,'%Y/%m/%d %H:%m:%s') as log_odate"])
         ->from('ticket_log')
-        ->join('left join','employee','employee.employee_id=ticket_log.employee_id')
+        ->join('left join','employee','employee.employee_id = ticket_log.employee_id')
         ->where(['ticket_id'=>$id])
         ->orderBy(['ABS(log_id)' => SORT_ASC])
         ->all();
+    }
+    
+    public function getAllNewMessage() {
+    	return self::find()->from("ticket_log tl")->join("inner join","ticket t","t.ticket_id = tl.ticket_id")
+    	->join('inner join','employee from','from.employee_id = tl.employee_id')
+    	->join('inner join','employee to','to.employee_id = tl.to_employee_id')
+    	->select(["tl.ticket_id","t.ticket_subject","DATE_FORMAT(log_date,'%Y/%m/%d %H:%m:%s') as log_date","log_desc",
+    			"from.EmployeeFirstName as employee_from_name","from.EmployeeEmail as employee_from_email",
+    			"to.EmployeeFirstName as employee_to_name","to.EmployeeEmail as employee_to_email"])
+    	->where(["tl.ticket_read" => 1])
+    	->all();
     }
     
     public static function getNewTicketLogData($limit=0){

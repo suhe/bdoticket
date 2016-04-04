@@ -14,6 +14,19 @@ return [
         'gii' => 'yii\gii\Module',
     ],
     'components' => [
+    	'i18n' => [
+    		'translations' => [
+    			'app*' => [
+    				'class' => 'yii\i18n\PhpMessageSource',
+    				'sourceLanguage' => 'en_us',
+    				'basePath' => '@app/language',
+    				'fileMap' => [
+    				'app' => 'app.php',
+    				'app/message' => 'message.php'
+    				]
+    			]
+    		]
+    	],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -25,7 +38,20 @@ return [
                 ],
             ],
         ],
+    	'mailer' => [
+    		'class' => 'yii\swiftmailer\Mailer',
+    		'viewPath' => '@app/mail',
+    		'useFileTransport' => false,
+    		'transport' => [
+    			'class' => 'Swift_SmtpTransport',
+    			'host' => 'mail.bdoindonesia.com',
+    			'username' => 'support@bdoindonesia.com',
+    			'password' => 'admin1234',
+    			'port' => '587'
+    		]				
+    	],
         'db' => $db,
     ],
+	'language' => 'id',
     'params' => $params,
 ];

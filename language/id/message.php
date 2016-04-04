@@ -1,6 +1,8 @@
 <?php
 return [ 
 		'msg please enter your information' => ' BDO Indonesia Connect',
+		'msg closed ticket by user' => 'ticket closed by user (50%)',
+		'msg closed ticket' => 'ticket closed (100%)',
 		'msg enter your nik' => 'Masukkan NIK Anda',
 		'msg enter your password' => 'Masukkan Password',
 		'msg hello guest' => 'Hallo Guest',
@@ -14,6 +16,7 @@ return [
 		'msg incorrect username or password' => 'Salah NIK atau Password',
 		'msg ticket has been close' => 'Tiket berhasil ditutup',
 		'msg ticket has been insert' => 'Tiket berhasil dibuat',
+		'msg email helpdesk create a open ticket' => 'Tiket dalam status Terbuka :',
 		'msg no data selection' => 'Tidak ada data yang diseleksi',
 		'msg delete success' => 'Hapus data sukses !',
 		'msg employee has been use' => 'Karyawan sudah ada di daftar Helpdesk',

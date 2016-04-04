@@ -13,5 +13,6 @@ return [
         1 => 'Selesai',
         0 => 'Tutup'
     ],
+	'mail_site' => 'http://ticket.bdoindonesia.com/',	
     'mail_user' => 'support@bdoindonesia.com',
 ];
