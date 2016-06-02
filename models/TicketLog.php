@@ -62,14 +62,6 @@ class TicketLog extends ActiveRecord {
             $model->ticket_read = 1;
             $model->insert();
             
-            /*if($helpdesk==true){
-                $ticket = new Ticket();
-                $ticket = $ticket->findOne($id);
-                if($this->log_status) $ticket->ticket_status = 1;
-                else $ticket->ticket_status = 2;
-                $ticket->update();
-            }*/
-            
             //update usercomment
             if(Yii::$app->session->get('helpdesk'))
                 $comment  = Yii::t('app/message','msg support reply');
@@ -86,12 +78,19 @@ class TicketLog extends ActiveRecord {
                 $rating = 0;
             }
             
-            Ticket::updateAll(['ticket_usercomment'=>$comment,'ticket_rating' => $rating,'ticket_status'=>$status],['ticket_id'=>$id]);
+            Ticket::updateAll([
+            	'ticket_usercomment' => $comment,
+            	'ticket_rating' => $rating,
+            	'ticket_status'=> $status,
+           		'ticket_uid' => Yii::$app->user->getId(),	
+            	'ticket_udate' => date("Y-m-d H:i:s")	
+            ],[
+            	'ticket_id'=>$id]);
             return true;
         }
     }
     
-    public function getTicketLogData($id){
+    public function getTicketLogData($id) {
         return TicketLog::find()
         ->select(['*',"DATE_FORMAT(log_date,'%d/%m/%Y %H:%m:%s') as log_date","DATE_FORMAT(log_date,'%Y/%m/%d %H:%m:%s') as log_odate"])
         ->from('ticket_log')

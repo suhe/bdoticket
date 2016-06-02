@@ -13,10 +13,10 @@ use app\models\TicketAttachment;
 class Ticket extends ActiveRecord {
     public $id;
     public $ticket_bulk;
-    public $closed=0;
-    public $finish=1;
-    public $process=2;
-    public $open=3;
+    public $closed = 0;
+    public $finish = 1;
+    public $process = 2;
+    public $open = 3;
     public $new=4;
     public $ticket_from_date;
     public $ticket_to_date;
@@ -27,6 +27,7 @@ class Ticket extends ActiveRecord {
     public $EmployeeFirstName;
     public $EmployeeEmail;
     public $total;
+    public $total_day_expired;
 
     public static function tableName(){
         return 'ticket';
@@ -226,11 +227,11 @@ class Ticket extends ActiveRecord {
         CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
         CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,
         CASE ticket_status
-            WHEN 4 THEN 'Baru'
-            WHEN 3 THEN 'Buka'
-            WHEN 2 THEN 'Proses'
-            WHEN 1 THEN 'Selesai'
-            WHEN 0 THEN 'Tutup'
+            WHEN 4 THEN '".Yii::t("app","new")."'
+	        WHEN 3 THEN '".Yii::t("app","open")."'
+	        WHEN 2 THEN '".Yii::t("app","progress")."'
+	        WHEN 1 THEN '".Yii::t("app","finish")."'
+	        WHEN 0 THEN '".Yii::t("app","closed")."'
         END ticket_status_string,ticket_status,ticket_helpdesk,ticket_note,ticket_type,ticket_handling
         FROM ticket t
         LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
@@ -344,5 +345,16 @@ class Ticket extends ActiveRecord {
     		$data[] = (int) $row->total;
     	}
     	return $data;
+    }
+    
+    public function getAllUserWaiting() {
+    	$sql = "select ticket_id,ticket_subject,e.EmployeeEmail,h.EmployeeEmail as helpdesk_email
+    			from ticket t 
+    			inner join employee h on h.employee_id = t.ticket_helpdesk
+    			inner join employee e on e.employee_id = t.employee_id
+    			where t.ticket_status = 2
+    			and (to_days(now()) - to_days(t.ticket_udate)) > ".Yii::$app->params['closed_ticket_expired']."
+    	";
+    	return self::findBySql($sql)->all();
     }
 }

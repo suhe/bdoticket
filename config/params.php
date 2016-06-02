@@ -15,4 +15,5 @@ return [
     ],
 	'mail_site' => 'http://ticket.bdoindonesia.com/',	
     'mail_user' => 'support@bdoindonesia.com',
+	'closed_ticket_expired' => 14 ,//by days	
 ];

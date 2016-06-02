@@ -42,7 +42,6 @@ class SiteController extends Controller {
         } 
         return $this->render('login',[
             'model' => $model,
-	    	//'employee' => $model->getEmployeeBpjs()
         ]);
     }			
     
@@ -55,4 +54,5 @@ class SiteController extends Controller {
     public function actionError(){
 		echo 'ERROR 404';
     }
+    
 }
