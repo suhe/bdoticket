@@ -32,7 +32,7 @@ $this->params['addUrl'] = 'ticket/order';
 			    <?php $form = ActiveForm::begin([
 			    'id' => 'menu-form',
 			    'method' => 'get',
-			    'action' => ['ticket/index'],
+			    'action' => ['ticket/list'],
 			    'options' => ['class' => 'form-inline pull-right','role' => 'form',],
 			    'fieldConfig' => ['template' => "{input}",]
 			    ]);?>
@@ -80,7 +80,7 @@ $this->params['addUrl'] = 'ticket/order';
 				    'attribute' => 'ticket_status_string',
 				    'footer' => Yii::t('app','status'),
 				],
-			        'helpdesk_name' => [
+			    'helpdesk_name' => [
 				    'attribute' => 'helpdesk_name',
 				    'footer' => Yii::t('app','support'),
 				],
@@ -100,24 +100,29 @@ $this->params['addUrl'] = 'ticket/order';
 <script>
 	//for tables checkbox demo
     jQuery(function($) {
-	$('table th input:checkbox').on('click' , function(){
-	    var that = this;
-	    $(this).closest('table').find('tr > td:first-child input:checkbox')
-	    .each(function(){
-		this.checked = that.checked;
-		$(this).closest('tr').toggleClass('selected');
-	    });
-						
-	});
+    	$('.input-group.date').datepicker({
+            autoclose : true,
+         	format: "dd/mm/yyyy"
+       	});
+       	    
+		$('table th input:checkbox').on('click' , function(){
+		    var that = this;
+		    $(this).closest('table').find('tr > td:first-child input:checkbox')
+		    .each(function(){
+			this.checked = that.checked;
+			$(this).closest('tr').toggleClass('selected');
+		    });
+							
+		});
 	
-	$('.btn-pwd').click(function (e) {
-	    if (!confirm('<?=Yii::t('app/message','msg btn password')?>')) return false;
-	    return true;
-	});
-	
-	$('.btn-delete').click(function (e) {
-	    if (!confirm('<?=Yii::t('app/message','msg btn delete')?>')) return false;
-	    return true;
-	});
+		$('.btn-pwd').click(function (e) {
+		    if (!confirm('<?=Yii::t('app/message','msg btn password')?>')) return false;
+		    return true;
+		});
+		
+		$('.btn-delete').click(function (e) {
+		    if (!confirm('<?=Yii::t('app/message','msg btn delete')?>')) return false;
+		    return true;
+		});
     });
 </script>

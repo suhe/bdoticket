@@ -92,7 +92,7 @@ class Ticket extends ActiveRecord {
     	return [
     		null => Yii::t("app","all"),
     		0 => Yii::t("app","closed"),
-    		1 => Yii::t("app","finish"),
+    		//1 => Yii::t("app","finish"),
     		2 => Yii::t("app","progress"),
     		3 => Yii::t("app","open"),
     		4 => Yii::t("app","new"),
@@ -147,10 +147,8 @@ class Ticket extends ActiveRecord {
     	return $query->all();	
     }
     
-   
-    
-    public function getAllDataProvider($params,$employee_id = null,$status = null,$helpdesk = null){
-        $sql = "SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
+    public function getAllDataProvider($params,$employee_id = null, $status = null,$helpdesk = null,$custom_search = array()){
+        /*$sql = "SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
 	        	CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
 	        	CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,ticket_status,
 	        	CASE 
@@ -166,7 +164,6 @@ class Ticket extends ActiveRecord {
 		        LEFT JOIN employee hh on hh.employee_id = h.employee_id		
 		        INNER JOIN employee e on e.employee_id = t.employee_id
 		        WHERE e.employee_id > 0 ";
-        
         if($employee_id) $sql.= " AND t.employee_id=".$employee_id;
         if($status) $sql.= " AND ticket_status=".$status;
         if($helpdesk) $sql.= " AND ticket_helpdesk=".$helpdesk;
@@ -179,46 +176,165 @@ class Ticket extends ActiveRecord {
         
         if ($this->load($params) && $this->ticket_to_date)
             $sql.=" AND ticket_date <= '".preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_to_date)."'";
+        */
         
-        $sql.=" ORDER BY ticket_cdate ASC ";    
-        $query = Ticket::findBySql($sql);
+        //$sql.=" ORDER BY ticket_cdate ASC ";    
+        //$query = Ticket::findBySql($sql);
+       	$query = Ticket::find()
+       	->from("ticket t")
+       	->join('inner join', 'employee e','e.employee_id = t.employee_id')
+       	->join('left join', 'employee h','h.employee_id = t.ticket_helpdesk')
+       	->select(["ticket_id","DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date","ticket_subject","ticket_usercomment",
+       		"CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name",
+       		"CONCAT(h.EmployeeFirstName,' ',h.EmployeeMiddleName,' ',h.EmployeeLastName) as helpdesk_name",	
+       		"CASE WHEN ticket_status = 4 THEN '".Yii::t("app","new")."'
+	         WHEN ticket_status = 3 THEN '".Yii::t("app","open")."'
+	         WHEN ticket_status = 2 THEN '".Yii::t("app","progress")."'
+	         WHEN ticket_status = 1 THEN '".Yii::t("app","finish")."'
+	         WHEN ticket_status = 0 AND ticket_status_helpdesk = 1 THEN '".Yii::t("app","closed")." (50%) '
+	         WHEN ticket_status = 0 AND ticket_status_helpdesk = 0 THEN '".Yii::t("app","closed")." (100%) '		
+		     END ticket_status_string"	
+       	]);
+       	
+       	//request GET Non Params employee id
+       	if (!empty($employee_id)) {
+       		$query = $query->where('t.employee_id = :id', [':id' => $employee_id]);
+       	}
+       	//request GET Non Params status
+       	if (!empty($status)) {
+       		$query = $query->where('t.ticket_status = :status', [':status' => $status]);
+       	}
+       	//request GET Non Params helpdesk
+       	if (!empty($helpdesk)) {
+       		$query = $query->where('t.ticket_helpdesk = :helpdesk', [':helpdesk' => $helpdesk]);
+       	}
+       	
         $countQuery = count($query->all());
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'totalCount' => $countQuery,
             'pagination' =>[
                 'pageSize' => Yii::$app->params['per_page'],
-            ]    
+            ],
+     
         ]);
+        
+        $dataProvider->setSort([
+        	'defaultOrder' => ['ticket_date'=>SORT_DESC],
+        	'attributes' => [
+        		'ticket_id' => [
+        			'asc' => ['ticket_id' => SORT_ASC],
+        			'desc' => ['ticket_id' => SORT_DESC],
+        			//'default' => SORT_DESC
+        		],
+        		'ticket_date' => [
+       				'asc' => ['ticket_date' => SORT_ASC],
+      				'desc' => ['ticket_date' => SORT_DESC],
+       				//'default' => SORT_DESC
+       			],
+        		'ticket_subject' => [
+        			'asc' => ['ticket_subject' => SORT_ASC],
+        			'desc' => ['ticket_subject' => SORT_DESC],
+        		],
+        		'employee_name' => [
+        			'asc' => ['employee_name' => SORT_ASC],
+        			'desc' => ['employee_name' => SORT_DESC],
+        		],
+        		'ticket_status_string' => [
+        			'asc' => ['ticket_status_string' => SORT_ASC],
+        			'desc' => ['ticket_status_string' => SORT_DESC],
+        		],
+        		'helpdesk_name' => [
+        			'asc' => ['helpdesk_name' => SORT_ASC],
+        			'desc' => ['helpdesk_name' => SORT_DESC],
+        		],
+        		'ticket_usercomment' => [
+        			'asc' => ['ticket_usercomment' => SORT_ASC],
+        			'desc' => ['ticket_usercomment' => SORT_DESC],
+        		],
+        	],
+        ]);	
+        
+        if (!($this->load($params) && $this->validate())) {
+        	return $dataProvider;
+        }
+        
+        if (!empty($this->ticket_from_date))
+        	$query->andFilterWhere(['>=', 'ticket_date', preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_from_date)]);
+        if (!empty($this->ticket_to_date))
+        	$query->andFilterWhere(['<=', 'ticket_date', preg_replace('!(\d+)/(\d+)/(\d+)!', '\3-\2-\1',$this->ticket_to_date)]);        	
+        if(!empty($this->ticket_status))
+        	$query->andFilterWhere(['=', 'ticket_status', $this->ticket_status]);
+     
         return $dataProvider;
     }
     
-    public function getAllRequestDataProvider($params){
-    	$sql = 
-    		"SELECT ticket_id,DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date,ticket_subject,
-	        CONCAT(hh.EmployeeFirstName,' ',hh.EmployeeMiddleName,' ',hh.EmployeeLastName) as helpdesk_name,ticket_usercomment,
-	        CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name,ticket_status,
-	        CASE ticket_status
-	           	WHEN 4 THEN '".Yii::t("app","new")."'
-	           	WHEN 3 THEN '".Yii::t("app","open")."'
-	           	WHEN 2 THEN '".Yii::t("app","progress")."'
-	           	WHEN 1 THEN '".Yii::t("app","finish")."'
-	           	WHEN 0 THEN '".Yii::t("app","closed")."'
-		     END ticket_status_string,ticket_helpdesk
-		     FROM ticket t
-		     LEFT JOIN helpdesk h on h.employee_id = t.ticket_helpdesk
-		     LEFT JOIN employee hh on hh.employee_id = h.employee_id
-		     INNER JOIN employee e on e.employee_id = t.employee_id
-		     WHERE t.ticket_status > 0 order by t.ticket_cdate asc";
-    	$query = Ticket::findBySql($sql);
-    	$countQuery = count($query->all());
-    	$dataProvider = new ActiveDataProvider([
-    		'query' => $query,
-    		'totalCount' => $countQuery,
-    		'pagination' =>[
-    			'pageSize' => Yii::$app->params['per_page'],
-    		]
+    public function getAllRequestDataProvider($params) {
+    	$status = 0;
+    	$query = Ticket::find()
+    	->from("ticket t")
+    	->join('inner join', 'employee e','e.employee_id = t.employee_id')
+    	->join('left join', 'employee h','h.employee_id = t.ticket_helpdesk')
+    	->where('t.ticket_status > :status', [':status' => $status])
+    	->select(["ticket_id","DATE_FORMAT(ticket_date,'%d/%m/%Y') as ticket_date","ticket_subject","ticket_usercomment",
+    			"CONCAT(e.EmployeeFirstName,' ',e.EmployeeMiddleName,' ',e.EmployeeLastName) as employee_name",
+    			"CONCAT(h.EmployeeFirstName,' ',h.EmployeeMiddleName,' ',h.EmployeeLastName) as helpdesk_name",
+    			"CASE WHEN ticket_status = 4 THEN '".Yii::t("app","new")."'
+	         WHEN ticket_status = 3 THEN '".Yii::t("app","open")."'
+	         WHEN ticket_status = 2 THEN '".Yii::t("app","progress")."'
+	         WHEN ticket_status = 1 THEN '".Yii::t("app","finish")."'
+	         WHEN ticket_status = 0 AND ticket_status_helpdesk = 1 THEN '".Yii::t("app","closed")." (50%) '
+	         WHEN ticket_status = 0 AND ticket_status_helpdesk = 0 THEN '".Yii::t("app","closed")." (100%) '
+		     END ticket_status_string"
     	]);
+    	
+    	$countQuery = count($query->all());
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'totalCount' => $countQuery,
+            'pagination' =>[
+                'pageSize' => Yii::$app->params['per_page'],
+            ],
+     
+        ]);
+        
+        $dataProvider->setSort([
+        	'defaultOrder' => ['ticket_date'=>SORT_DESC],
+        	'attributes' => [
+        		'ticket_id' => [
+        			'asc' => ['ticket_id' => SORT_ASC],
+        			'desc' => ['ticket_id' => SORT_DESC],
+        			//'default' => SORT_DESC
+        		],
+        		'ticket_date' => [
+       				'asc' => ['ticket_date' => SORT_ASC],
+      				'desc' => ['ticket_date' => SORT_DESC],
+       				//'default' => SORT_DESC
+       			],
+        		'ticket_subject' => [
+        			'asc' => ['ticket_subject' => SORT_ASC],
+        			'desc' => ['ticket_subject' => SORT_DESC],
+        		],
+        		'employee_name' => [
+        			'asc' => ['employee_name' => SORT_ASC],
+        			'desc' => ['employee_name' => SORT_DESC],
+        		],
+        		'ticket_status_string' => [
+        			'asc' => ['ticket_status_string' => SORT_ASC],
+        			'desc' => ['ticket_status_string' => SORT_DESC],
+        		],
+        		'helpdesk_name' => [
+        			'asc' => ['helpdesk_name' => SORT_ASC],
+        			'desc' => ['helpdesk_name' => SORT_DESC],
+        		],
+        		'ticket_usercomment' => [
+        			'asc' => ['ticket_usercomment' => SORT_ASC],
+        			'desc' => ['ticket_usercomment' => SORT_DESC],
+        		],
+        	],
+        ]);	
+    	
+    	
     	return $dataProvider;
     }
     

@@ -37,9 +37,7 @@ $this->params['addUrl'] = 'ticket/order';
 			    ]);?>
 			    <?=$form->field($model,'ticket_from_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date from')]);?>
 			    <?=$form->field($model,'ticket_to_date',['template' => '<div class="input-group date">{input}<div class="input-group-addon"><span class="glyphicon glyphicon-th"></span> </div></div>'])->textInput(['placeholder' => Yii::t('app','date to')]);?>
-			    
 			    <?=$form->field($model,'ticket_status')->dropDownList(Yii::$app->params['ticket_status'])?>
-             
 			    <div class="form-group ">
 				<?=Html::submitButton(Yii::t('app/backend','search'), ['class' => 'btn btn-primary btn-md','name' => 'search'])?>
 			    </div> 
@@ -97,16 +95,13 @@ $this->params['addUrl'] = 'ticket/order';
 					return Html::a('<i class="fa fa-wrench"></i> ' .Yii::t('app','view'),$url);
 				    },
 				    
-				    
 				],
 				],
 			    ],
 			    'showFooter' => true ,
 			] );?>
 			</div>
-		    
-		     </div>
-		    
+		 </div>   
 		</div>
 	    </div>
 	</div><!--/Portlet -->
@@ -118,24 +113,29 @@ $this->params['addUrl'] = 'ticket/order';
 <script>
 	//for tables checkbox demo
     jQuery(function($) {
-	$('table th input:checkbox').on('click' , function(){
-	    var that = this;
-	    $(this).closest('table').find('tr > td:first-child input:checkbox')
-	    .each(function(){
-		this.checked = that.checked;
-		$(this).closest('tr').toggleClass('selected');
-	    });
-						
-	});
+    	$('.input-group.date').datepicker({
+            autoclose : true,
+         	format: "dd/mm/yyyy"
+       	});
+       	
+		$('table th input:checkbox').on('click' , function(){
+		    var that = this;
+		    $(this).closest('table').find('tr > td:first-child input:checkbox')
+		    .each(function(){
+			this.checked = that.checked;
+			$(this).closest('tr').toggleClass('selected');
+		    });
+							
+		});
 	
-	$('.btn-pwd').click(function (e) {
-	    if (!confirm('<?=Yii::t('app/message','msg btn password')?>')) return false;
-	    return true;
-	});
+		$('.btn-pwd').click(function (e) {
+		    if (!confirm('<?=Yii::t('app/message','msg btn password')?>')) return false;
+		    return true;
+		});
 	
-	$('.btn-delete').click(function (e) {
-	    if (!confirm('<?=Yii::t('app/message','msg btn delete')?>')) return false;
-	    return true;
-	});
+		$('.btn-delete').click(function (e) {
+		    if (!confirm('<?=Yii::t('app/message','msg btn delete')?>')) return false;
+		    return true;
+		});
     });
 </script>
