@@ -108,9 +108,10 @@ class Ticket extends ActiveRecord {
     
     public function getSave($is_helpdesk_fill = false){
         if($this->validate()) {
+        	$employee_id = $is_helpdesk_fill == true ? $this->employee_id : Yii::$app->user->getId();
             $model = new Ticket();
             $model->ticket_date = date('Y-m-d');
-            $model->employee_id = $is_helpdesk_fill == true ? $this->employee_id : Yii::$app->user->getId() ;
+            $model->employee_id = $employee_id;
             $model->ticket_helpdesk = $is_helpdesk_fill == true ? $this->ticket_helpdesk : null;
             $model->ticket_handling = $is_helpdesk_fill == true ? $this->ticket_handling : null;
             $model->ticket_status = $is_helpdesk_fill == true ?  $this->open : $this->new;

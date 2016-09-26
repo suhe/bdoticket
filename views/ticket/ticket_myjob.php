@@ -31,7 +31,7 @@ $this->params['addUrl'] = 'ticket/order';
 			    <?php $form = ActiveForm::begin([
 			    'id' => 'menu-form',
 			    'method' => 'get',
-			    'action' => ['ticket/index'],
+			    'action' => ['ticket/myjob'],
 			    'options' => ['class' => 'form-inline pull-right','role' => 'form',],
 			    'fieldConfig' => ['template' => "{input}",]
 			    ]);?>

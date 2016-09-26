@@ -229,8 +229,7 @@ class TicketController extends Controller {
         $userUploadPath = $uploadPath.'/'.$user;
         
         if (isset($_FILES[$fileName])) {
-            yii\helpers\FileHelper::createDirectory($userUploadPath,777,true);
-            
+            \yii\helpers\FileHelper::createDirectory($userUploadPath,0777,true);
             $file = \yii\web\UploadedFile::getInstanceByName($fileName);
             if ($file->saveAs($userUploadPath . '/' . 'attachment'.date('Y-m-d-H-i-s').'.'.$file->extension)) {
                 //Now save file data to database
@@ -243,6 +242,7 @@ class TicketController extends Controller {
                 $ticket_att->insert();
                 echo \yii\helpers\Json::encode($file);
             }
+            
             return true;
         }
         return false;
